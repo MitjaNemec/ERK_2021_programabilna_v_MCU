@@ -59,46 +59,27 @@ koprocesorja.
 
 
 \section{Uvod}
-Pri oblikovanju vdelanih sistemov se zaradi preprostega programiranja in
-cenovne ugodnosti najpogosteje poslužujemo mikrokrmilnikov različnih
-proizvajalcev. Na začetku (včasih ``celo'' na sredini) oblikovalnega procesa, v
-včasih preveliki ponudbi, izberemo čip, ki najbolje ustreza našim zahtevam.
+V prejšnjem članku smo pregledali zgradbo in delovanje sistema CLB (angl.
+configurable logic block), ki je odgovor proizvajalca Texas Instruments na
+številne težave pri implementaciji FPGA (angl. field-programable gate array). 
 
-Obstajajo pa tudi aplikacije, ki jim konvencionalni mikrokrmilniki niso kos. Tu
-nastopi iskanje drugačnih rešitev. Če imamo srečo, morda odkrijemo kakšen ASIC
-(angl. application specific integrated circuit), ki zadošča našim potrebam,
-vendar je na določenih področjih teh dokaj malo. V določenih aplikacijah nam ne
-preostane drugega oz. za boljšo rešitev odkrijemo FPGA (angl. field-programable
-gate array). Ti nam omogočajo postavitev sistema na nizkem nivoju, ki ga lahko
-prikrojimo natanko našim zahtevam. FPGA v veliko aplikacijah namestimo poleg
-prej omenjenega mikrokrmilnika in ga uporabimo kot dodaten procesor.
-
-Kljub temu, da so FPGA čipi precej zmogljivi, pa nastopi težava pri sami
-izvedbi. Kadra, ki ima globoko znanje takšnih sistemov je zaradi zahtevnosti
-precej malo. Poleg tega pa uporaba dveh čipov za pri številnih aplikacijah
-nemalokrat ni idealna, saj ti čipi dostikrat zahtevajo uporabo zunanjega RAM in
-Flash spomina, za komunikacijo s katerima smo odgovorni sami. Razne
-komunikacije med posameznimi modulil običajno terjajo največ razvojnega časa,
-hkrati pa je poleg FPGA ponavadi prisoten tudi mikrokrmilnik, ki je hkrati
-dodatna finančna obremenitev in še ena linija komunikacije za implementacijo.
-
-Na naštete težave je proizvajalec Texas Instruments odgovoril s koprocesorjem
-CLB (angl. configurable logic block), ki je vdelan v nekaj njihovih
-mikrokrmilnikov. Ta naj bi po proizvajalčevih trditvah tako nadomestil dodaten
-FPGA (in s tem razvijalcu prihranil marsikatero uro), kot tudi omogočil
-programiranje s preprostim vmesnikom \cite{clb-intro}.
-
-
-
-\section{Praktičen primer}
+Kot je bilo opisano v prejšnjem članku, za programiranje omenjenega
+koprocesorja uporabljamo orodje ``CLB Tool''. To nam preko grafičnega vmesnika
+omogoča nastavljanje različnih podsklopov ter generira kodo za uporabo v
+programu. Poleg generirane kode pa nam omogoča vpogled v vse podsklope preko
+simulacijskih datotek ter dodatnega diagrama povezav.
 
 Primer praktične uporabe CLB koprocesorja je simulacija inkrementalnega
 dajalnika. Kot je to dejstvo v veliko področjih, je tudi tu možnih več
 pristopov. Tudi implementacija, opisana v nadaljevanju ni bila očitna že od
 samega začetka, samo raziskovanje je vključevalo nemalo neuspelih poskusov.
-Naša idejna zasnova je prikazana na sliki \ref{fig:enkoder_zasnova}, kjer lahko
-opazimo da je na vhod CLB koprocesorja priključen kvadratni signal s polovičnim
-delovnim ciklom.
+
+
+
+\section{Idejna zasnova}
+Zasnova simuliranega inkrementalnega dajalnika je prikazana na sliki
+\ref{fig:enkoder_zasnova}, kjer lahko opazimo da je na vhod CLB koprocesorja
+priključen kvadratni signal s polovičnim delovnim ciklom.
 
 V CLB koprocesorju se vhodni signal uporabi za referenco in ``na'' njem
 proizvede dva izhodna signala, ki sta drug drugemu zamaknjena za 90°. Poleg
@@ -118,19 +99,18 @@ registrov. V času pisanja pa je za delo s CLB koprocesorjem na voljo le
 ``Driverlib'', ki vsebuje dokaj bolj kompleksne funkcije.
 
 
-\subsection{Nastavljanje CLB podkslopov}\label{sec:nastavitve_podsklopov}
+\section{Nastavljanje CLB podkslopov}\label{sec:nastavitve_podsklopov}
 Zaradi postavitve projekta na knjižnicah ``Bitfield'' in temu pripadajočega
 izostanka orodja CLB Tool, je za konfiguracijo najlažja uporaba spletnega
 orodja ``SysConfig'', ki vsebuje povsem enak vmesnik, kot ga ima projekt s
 knjižnicami ``Driverlib'' \cite{sysconfig}.
 
-\subsubsection{Splošne nastavitve}
+\subsection{Splošne nastavitve}
 Ker CLB obravnavamo kot ločen sistam, je najlažje da se pred komunikacijo z
 matično napravo poslužujemo simulacije. V ta namen je v orodju ``CLB Tool'' za
-modul ``BOUNDARY'' na voljo možnost simuliranega kvadratnega signala (Pogl.
-\ref{sec:clb_tool}). Za implementacijo inkrementalnega dajalnika je kot
-simuliran vhod definiran vhod in2, kar prikazuje tudi slika
-\ref{fig:clbtool_boundary}.
+modul ``BOUNDARY'' na voljo možnost simuliranega kvadratnega signala. Za
+implementacijo inkrementalnega dajalnika je kot simuliran vhod definiran vhod
+in2, kar prikazuje tudi slika \ref{fig:clbtool_boundary}.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{clbtool_boundary}}
@@ -138,7 +118,7 @@ simuliran vhod definiran vhod in2, kar prikazuje tudi slika
     \label{fig:clbtool_boundary} 
 \end{figure} 
 
-\subsubsection{Nastavljanje parametrov}\label{sec:nastavljanje_clb}
+\subsection{Nastavljanje parametrov}\label{sec:nastavljanje_clb}
 Emulacijo inkrementalnega dajalnika smo implementirali na naslednji način:
 \begin{itemize}
     \item Za vir ure/hitrosti smo uporabili eCAP modul v funkciji PWM
@@ -161,9 +141,8 @@ slike \ref{fig:dobra_zasnova_shema} in \ref{fig:dobra_zasnova_potek}.
     \item V HLC modulu se dogodki prožijo ob pozitivnem robu prožilnega
         signala, torej se pripadajoč dogodek sproži na vsako periodo signala
         ``in2'' (s 180° zamikom).
-    \item HLC modul operira z vrednostmi ``R0'', ``R1'', ``C0'' in ``C1''
-        (Pogl. \ref{sec:hlc}), pri tem je začetna vrednost ``R0'' nastavljena
-        na 1.
+    \item HLC modul operira z vrednostmi ``R0'', ``R1'', ``C0'' in ``C1'', pri
+        tem je začetna vrednost ``R0'' nastavljena na 1.
     \item Oba števca sta nastavljena, da ne štejeta, nimata vhodnih signalov,
         le vrednost ``MATCH1'' je nastavljena na 1 - uporabljena sta le kot
         komparatorja.
@@ -201,7 +180,7 @@ slike \ref{fig:dobra_zasnova_shema} in \ref{fig:dobra_zasnova_potek}.
     \label{fig:dobra_zasnova_potek}
 \end{figure}
 
-\subsubsection{Obračanje smeri inkrementalnega dajalnika}
+\subsection{Obračanje smeri inkrementalnega dajalnika}
 V drugem primeru iz poglavja \ref{sec:nastavljanje_clb} smo parametre nastavili
 tako, da je signal ``MATCH1'' iz števca 1 vedno zakasnjen glede na signal
 ``MATCH1'' iz števca 0. Zato je potrebno dodati tudi logiko za obračanje smeri
@@ -242,7 +221,7 @@ Celotna shema končne implementacije je prikazana na sliki
     \label{fig:koncna_shema}
 \end{figure}
 
-\subsection{Vhodni signali v CLB}
+\section{Vhodni signali v CLB}
 vhodni signali v poglavju \ref{sec:nastavitve_podsklopov} so bili za čas
 nastavljanja podsklopov zaradi enostavnejšega dela le simulirani. Za delovanje
 pa je potrebno signal speljati iz enega od modulov na integriranem vezju. Kot
@@ -250,7 +229,7 @@ je razbrati iz poglavja \ref{sec:nastavljanje_clb}, potrebujemo kvadratni
 vhodni signal z nastavljivo frekvenco ter signal za obračanje smeri, ki bo v
 naravnem stanju prevzel logično 1, ob pritisku pa logično 0.
 
-\subsubsection{Generiranje kvadratnega signala}
+\subsection{Generiranje kvadratnega signala}
 Za vhodni signal v CLB je uporabljen izhod iz ``eCAP'' modula, ki je v osnovi
 števec. Ta odločitev je nastala zgolj zaradi 32-bitnega števca v omenjenem
 modulu, kar omogoča bolj natančno določitev periode. Modul preko
@@ -258,6 +237,7 @@ pulzno-širinske modulacije generira kvadratni signal s polovičnim delovnim
 ciklom. Implementacija funkcije za usposobitev ``eCAP'' modula v načinu
 ``apwm'' je prikazana na seznamu \ref{lst:ecap_init}.
 
+\filbreak
 \begin{lstlisting}[language=C,
                    caption={Implementacija funkcije za usposobitev ``eCAP'' 
                             modula v ``apwm'' načinu},
@@ -291,13 +271,13 @@ kjer ga lahko opazujemo z osciloskopom ali logičnim analizatorjem.
 Ta signal je nato priključen na lokalni vhod 2 CLB koprocesorja, ter opravlja
 vlogo prej simuliranega vhoda ``in2''.
 
-\subsubsection{Signal za obračanje smeri}
+\subsection{Signal za obračanje smeri}
 Za obračanje smeri je bil izbran signal ``GPIO24''. Ta je nastavljen kot vhod z
 ``pull-up'', kar pomeni, da bo v odprtem položaju zavzel logično 1. Preko
 vhodnega ``X-bar''-a in globalnega vodila je priključen na vhod 0 CLB
 koprocesorja in s tem prevzema mesto prej simuliranega signala ``in0''.
 
-\subsection{Delovanje inkrementalnega dajalnika}
+\section{Delovanje inkrementalnega dajalnika}
 Za lažjo uporabo simuliranega inkrementalnega dajalnika so vse nastavitve, ki
 niso del orodja ``CLB Tool'' zapakirane v funkciji ``CLB1\_init''. Za končnega
 uporabnika pa je vse skupaj razkrito v funkciji, prikazani na seznamu
@@ -327,25 +307,21 @@ parametrov CLB koprocesorja.
 
 
 \section{Zaključek}
-Že iz praktičnega primera lahko razberemo, da je CLB koprocesor uporaben
+Iz praktičnega primera lahko razberemo, da je CLB koprocesor uporaben
 dodatek za marsikatero aplikacijo, kjer bi z njim lahko nadomestili FPGA čip. V
 grobem lahko rečemo, da trditve proizvajalca (ob ignoriranju tržnih
 izmišljotink seveda) v veliki meri držijo. CLB lahko marsikje nadomesti FPGA,
 je lažji za programiranje, ter je seveda direktno na samem integriranem vezju,
 kar med drugim v veliko primerih pomeni tudi nižjo ceno.
 
-Vendar pa tudi CLB, kot vsaka stvar ne pride brez pomankljivosti. Skoraj vsaka
-``izboljšava'' nad FPGA s seboj prinese tudi kakšno frustracijo za programerja;
-grafični vmesnih ``CLB Tool'' je na prvi pogled res prijazen, a se zaradi
-velike abstrakcije kaj hitro izgubimo med neštetimi nastavitvenimi meniji.
-Lahko si predstavljamo, da bi ob obsežnejših projektih bilo že zaradi nekakšne
-standardizacije bolj smiselno uporabiti FPGA.
+Grafični vmesnik ``CLB Tool'' zaradi svoje narave zahteva veliko
+potrpežljivosti. Če je to težava pri tako majhni aplikaciji, si je lahko
+predstavljati težavnost pri obsežnih projektih.
 
-Vendar pa je kljub pomankljivostim tovrstna izvedba dodatnega koprocesorja zelo
-smiselna. Znanje programiranja FPGA vezij je precej specifično, zato je kadra,
-ki bi imel visoko znanje o njih bore malo. Poleg tega pa je s stališča
-delodajalcev velikokrat bolj smiselno uporabiti rešitev, ki jo lahko
-implementira obstoječ kader, kot pa iskanje znanja izven podjetja.
+CLB pa žari pri majhnih projektih, kjer je bistvenega pomena hitra
+implementacija ter se manipulira z manjšim številom signalov. Prav tako je
+vsakemu programerju omogočena enostavna uporaba, brez da bi se popolnoma
+posvečal takšnim vezjim.
 
 
 

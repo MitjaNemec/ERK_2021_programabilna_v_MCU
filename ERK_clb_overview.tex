@@ -37,11 +37,9 @@
 FPGA integrirana vezja so v praksi nemalokrat nepogrešljiva, vendar pa je
 njihova implementacija velikokrat zahtevna. V članku raziskujemo enega izmed
 odgovorov na to težavo, ki ga ponuja proizvajalec Texas Instruments v svojih
-mikrokrmilnikih z dodatnim t.i. CLB koprocesorjem. Na grobo je opisana sestava
+mikrokrmilnikih z dodatnim t.i. CLB koprocesorjem. Opisana je sestava
 omenjenega koprocesorja, katere razumevanje je bistveno za koriščenje takšnega
-sistema. Kasneje pa je implementacija predstavljena še na praktičnem primeru
-simulacije inkrementalnega dajalnika, ki prikaže širšo sliko uporabnosti
-koprocesorja.
+sistema.
 \end{abstract}
 
 \selectlanguage{slovene}
@@ -292,25 +290,28 @@ brskalniku (slika \ref{fig:clbtool_diagram})\cite[Pogl.~1]{clb-user-guide}.
 
 
 \section{Zaključek}
-Že iz praktičnega primera lahko razberemo, da je CLB koprocesor uporaben
-dodatek za marsikatero aplikacijo, kjer bi z njim lahko nadomestili FPGA čip. V
-grobem lahko rečemo, da trditve proizvajalca (ob ignoriranju tržnih
-izmišljotink seveda) v veliki meri držijo. CLB lahko marsikje nadomesti FPGA,
-je lažji za programiranje, ter je seveda direktno na samem integriranem vezju,
-kar med drugim v veliko primerih pomeni tudi nižjo ceno.
+Za programerja FPGA vezij so stvari, opisane v tem članku verjetno precej
+domače. Lahko pa opazimo da sam CLB ni le FPGA vdelan v mikrokrmilnik, vendar
+prinaša tudi nekatere novosti (npr. HLC), zaradi katerih je marsikatera
+aplikacija dokaj lažja za implementacijo.
+
+Poleg tega so na voljo tudi precej močna tudi orodja v opisanem ekosistemu.
+Grafično orodje omogoča uporabo tudi manj veščim programerjem. Dodatne
+generirane simulacijske datoteke pa so v veliko situacijah nepogrešljive, saj s
+samim opazovanjem zunanjih signalov težko odkrijemo morebitno napako. Enako
+velja za generirani diagram, ki je (če že ne drugače) uporaben za odkrivanje
+napačnih in nepotrebnih povezav med posameznimi moduli v koprocesorju.
 
 Vendar pa tudi CLB, kot vsaka stvar ne pride brez pomankljivosti. Skoraj vsaka
 ``izboljšava'' nad FPGA s seboj prinese tudi kakšno frustracijo za programerja;
 grafični vmesnih ``CLB Tool'' je na prvi pogled res prijazen, a se zaradi
 velike abstrakcije kaj hitro izgubimo med neštetimi nastavitvenimi meniji.
-Lahko si predstavljamo, da bi ob obsežnejših projektih bilo že zaradi nekakšne
-standardizacije bolj smiselno uporabiti FPGA.
 
-Vendar pa je kljub pomankljivostim tovrstna izvedba dodatnega koprocesorja zelo
-smiselna. Znanje programiranja FPGA vezij je precej specifično, zato je kadra,
-ki bi imel visoko znanje o njih bore malo. Poleg tega pa je s stališča
-delodajalcev velikokrat bolj smiselno uporabiti rešitev, ki jo lahko
-implementira obstoječ kader, kot pa iskanje znanja izven podjetja.
+Kljub temu pa lahko rečemo, da je takšna izvedba dodatnega modula zelo
+smiselna. Nemalokrat se znajdemo v situaciji, kjer bi bilo potrebno modulirati
+nek signal, vendar je samo zanj uporaba dodatnega čipa nesmiselna. Poleg tega
+pa je s stališča delodajalcev velikokrat bolj smiselno uporabiti rešitev, ki jo
+lahko implementira obstoječ kader, kot pa iskanje znanja izven podjetja.
 
 
 
@@ -327,5 +328,3 @@ migracijo obstoječih FPGA projektov na CLB pa je precej dober uvod vir
 
 \end{sloppypar}
 \end{document}
-
-
