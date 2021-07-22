@@ -23,9 +23,9 @@
 \begin{sloppypar}
 \title{Uporaba v mikrokrmilnik vgrajenih programirljivih logičnih vezij}
 
-\author{Andrej Kenda$^{1}$}
+\author{Andrej Kenda, Mitja Nemec}
 
-\affiliation{$^{1}$Ime in naslov organizacije prvega avtorja}
+\affiliation{Univerza v Ljubljani, Fakulteta za elektrotehniko, Tržaška 25, 1000 Ljubljana, Slovenija}
 
 \email{E-pošta: ak8655@student.uni-lj.si}
 
@@ -44,33 +44,28 @@ FPGA integrated circuits are often indispensable in practice, but their implemen
 \section{Uvod}
 Pri oblikovanju vdelanih sistemov se zaradi preprostega programiranja in
 cenovne ugodnosti najpogosteje poslužujemo mikrokrmilnikov različnih
-proizvajalcev. Na začetku (včasih ``celo'' na sredini) oblikovalnega procesa, v
+proizvajalcev. Na začetku oblikovalnega procesa, v
 včasih preveliki ponudbi, izberemo čip, ki najbolje ustreza našim zahtevam.
 
 Obstajajo pa tudi aplikacije, ki jim konvencionalni mikrokrmilniki niso kos. Tu
 nastopi iskanje drugačnih rešitev. Če imamo srečo, morda odkrijemo kakšen ASIC
 (angl. application specific integrated circuit), ki zadošča našim potrebam,
 vendar je na določenih področjih teh dokaj malo. V določenih aplikacijah nam ne
-preostane drugega oz. za boljšo rešitev odkrijemo FPGA (angl. field-programable
-gate array). Ti nam omogočajo postavitev sistema na nizkem nivoju, ki ga lahko
+preostane drugega kot uporaba FPGA (angl. field-programable
+gate array) vezja. Ti nam omogočajo postavitev sistema na nizkem nivoju, ki ga lahko
 prikrojimo natanko našim zahtevam. FPGA v veliko aplikacijah namestimo poleg
 prej omenjenega mikrokrmilnika in ga uporabimo kot dodaten procesor.
 
-Kljub temu, da so FPGA čipi precej zmogljivi, pa nastopi težava pri sami
-izvedbi. Kadra, ki ima globoko znanje takšnih sistemov je zaradi zahtevnosti
-precej malo. Poleg tega pa uporaba dveh čipov za pri številnih aplikacijah
-nemalokrat ni idealna, saj ti čipi dostikrat zahtevajo uporabo zunanjega RAM in
-Flash spomina, za komunikacijo s katerima smo odgovorni sami. Razne
-komunikacije med posameznimi modulil običajno terjajo največ razvojnega časa,
-hkrati pa je poleg FPGA ponavadi prisoten tudi mikrokrmilnik, ki je hkrati
-dodatna finančna obremenitev in še ena linija komunikacije za implementacijo.
+Kljub temu, da so FPGA čipi precej zmogljivi, pa je njihova integracija v sistem težka.
+Kadra, ki ima globoko znanje takšnih sistemov je zaradi zahtevnosti
+precej malo. FPGA vezja namreč pogosto zahtevajo uporabo zunanjih RAM in FLASH vezji ter ADC in/ali DAC pretvornikov. Tako že načrtovanje tiskanega vezja okoli FPGA vezja zashteva več truda, dodaten trud pa zahteva tudi 
+komunikacija med posameznimi moduli. V kolikor pa je poleg poleg FPGA prisoten tudi mikrokrmilnik je tak sistem v primerjavi s sistemom, ki temelji samo in samo na mikrokrmilniku dražji tako za načrtovanje, razvoj programske opreme kot tudi za izdelavo. Proizvajalci FPGA vezji na te probleme odgovarjajo z vgradnjo mikrkrmilnika v samo FPGA vezje.
 
-Na naštete težave je proizvajalec Texas Instruments odgovoril s koprocesorjem
+Z druge strani na naštete težave odgovarja proizvajalec Texas Instruments s koprocesorjem
 CLB (angl. configurable logic block), ki je vdelan v nekaj njihovih
 mikrokrmilnikov. Ta naj bi po proizvajalčevih trditvah tako nadomestil dodaten
 FPGA (in s tem razvijalcu prihranil marsikatero uro), kot tudi omogočil
 programiranje s preprostim vmesnikom \cite{clb-intro}.
-
 
 
 \section{Predstavitev CLB}\label{sec:predstavitev}
@@ -79,6 +74,9 @@ koprocesorju, ki je del mikrokrmilnika F28379D, proizvajalca Texas Instruments.
 Na sliki je razvidno, da je omenjeni CLB sestavljen iz štirih med seboj enakih
 podsklopov (angl. Tile). Vsak podsklop je sestavljen iz procesorja (angl. CELL)
 ter vmesnika za ``priklop'' signalov iz matične naprave (angl. CPU I/F).
+
+% če se slika zamenja, se tale odstavek spremeni. Jaz ne bi omenjila lokalnega, globalnega in sistemskega vodila
+% ja na tem mestu že preveč specifično. Dovolj bo da se pove, da so vhodi v CLB lahko GPIO ali periferne naprave ali izhodi drugih delov(tile) CLB-ja. Prav tako izhodi.
 
 V CLB lahko vhodne signale pripeljemo preko treh vodil, lokalnega, globalnega
 in sistemskega vodila. Teh se za vhode v CLB poslužujemo glede na samo
@@ -93,6 +91,8 @@ Interakcija pa ni omejena le z dodatnimi napravami in matičnim procesorjem,
 temveč je mogoča tudi med različnimi podsklopi CLB-ja. Možno pa je tudi
 proženje prekinitev, na katere lahko procesor ustrezno reagira.
 
+% ta slika ima precej nepotrebnih informacij
+% mogoče bi jo zamenjal z Figure 2-5 iz spraco2a
 \begin{figure*}[t]
     \begin{center}
         \begin{minipage}[t]{12cm}
@@ -104,7 +104,7 @@ proženje prekinitev, na katere lahko procesor ustrezno reagira.
     \end{center}
 \end{figure*}
 
-
+% tole bi tudi veljalo razmisliti, da se zamenja z Figure 2-11 iz spraco2a
 
 \section{Zgradba CLB modulov}\label{sec:zgradbaclb}
 V poglavju \ref{sec:predstavitev} je omeneno, da je sam CLB sestavljen iz
@@ -131,9 +131,9 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
 \end{figure*}
 
 \subsection{LUT moduli}\label{sec:lut}
-LUT4 modul omogoča modulacijo signala preko logičnih operacij. Vhodne signale
-(slika \ref{fig:lut4} - ``IN0''-``IN3'') lahko preko enačbe z ``AND'', ``OR'',
-``NOT'' in ``XOR'' operacijami odvedemo v izhodni signal
+LUT4 modul omogoča izvajanje logičnih operacij nad vhodnimi signali 
+(slika \ref{fig:lut4} - ``IN0''-``IN3''). Podprte logične operacije so ``AND'', ``OR'',
+``NOT'' in ``XOR''.
 \cite[Pogl.~3.3]{clb-user-guide}.
 
 \begin{figure}[htb]
@@ -151,7 +151,7 @@ je tudi ena izmed njegovih funkcij \cite[Pogl.~26.4.4-26.4.5]{mcu-ref-manual}.
 Števec je precej kompleksen modul v CLB-ju, ki ga lahko nastavimo za delovanje
 kot števec, seštevalnik, komparator ali operator zamika. S slike
 \ref{fig:stevec} je moč razbrati štiri funkcijske vhode; ``RESET'', ``MODE 0'',
-``MODE 1'' in ``EVENT''. Prvi od teh vhodnih signalov ob visoki vrednosti
+``MODE 1'' in ``EVENT''. ``RESET'' ob visoki vrednosti
 števec postavi na vrednost 0, ``MODE 0'' ob visoki vrednosti omogoči štetje,
 ``MODE 1'' nastavi smer štetja (visoko - navzgor, nizko - navzdol), signal
 ``EVENT'' pa ob pozitivnem robu sproži dogodek, na katerega ta odreagira z
@@ -171,7 +171,7 @@ Kot izhod iz števca lahko spremljamo signale ``ZERO'', ``MATCH1'' in
 ``MATCH2''. Prvi prevzame visoko vrednost kadar je vrednost števca 0, ostala
 dva pa se vklopita, kadar je vrednost števca enaka nastavljeni pripadajoči
 vrednosti. Ko števec doseže svojo maksimalno vrednost ($2^{32}$) ta ``prelije''
-in začne šteti od 0. Temu obnašanju se ponavadi želimo izogniti
+in začne šteti od 0.
 \cite[Pogl.~26.4.2]{mcu-ref-manual}.
 
 \subsection{FSM moduli}
@@ -182,10 +182,6 @@ LUT'' (slika \ref{fig:fsm}), te so po zgradbi povsem enake opisanim v poglavju
 tabeli, ki služita interni modulaciji signalov in operirata z zunanjima
 signaloma ``EXT\_IN0'', ``EXT\_IN1'' in vhodoma ``S0'' in ``S1'', ki prevzameta
 prejšnjo vrednost izhoda pripadajoče tabele.
-
-Če nimamo potrebe po implemetaciji avtomata stanj, se lahko poslužimo tudi
-``Output LUT'', in modul uporabimo kot običajno LUT tabelo (izhod
-``FSM\_LUT\_OUT'').
 
 Če aplikacija ne potrebuje uporabe FSM modula, se lahko poslužimo še vhodov
 ``EXTRA\_EXT\_IN0'' in ``EXTRA\_EXT\_IN1''. V tem primeru celoten modul deluje
@@ -199,25 +195,17 @@ kot štirivhodni LUT modul.
 \end{figure} 
 
 \subsection{HLC modul}\label{sec:hlc}
-HLC modul je za razliko od ostale naprave veliko bolj kompleksen. S slike
-\ref{fig:hlc} je iz bloka za procesiranje dogodkov in štirih registrov, ki
-služijo za shranjevanje spremenljivk
-``R0''-``R3''\cite[Pogl.~26.4.6]{mcu-ref-manual}.
-
-Modul lahko direktno upravljamo tudi z matičnim procesorjem, s katerim modul
-lahko komunicira tudi preko ``push-pull'' metode zapisovanja v skupni spomin.
-
-Operiramo lahko s prej omenjenimi spremenljivkami ``R0''-``R3'', z vrednostmi
-števcev ``C1''-``C2'' in z obemi ``MATCH'' vrednostmi v števcih. Za proženje
-dogodkov ima modul štiri vhodne signale. Vsak od teh sproži sebi pripadajoč
-program, zapisan v instrukcijskem spominu. Ta lahko na omenjenih spremenljivkah
-izvede naslednje operacije \cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
+HLC modul je za razliko od ostale naprave veliko bolj kompleksen \ref{fig:hlc}. Gre pravzaprav za zelo okrnjeno procesno jedro, kateremu lahko sprogramiramo rudimentarno sekvenco ukazov v zbirniku\cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
 \begin{itemize}
     \item ADD/SUB - seštevanje in odštevanje,
     \item MOV/MOV\_T1/MOV\_T2 - premikanje,
     \item PUSH/PULL - pisanje in branje v skupnem spominu,
     \item INTR - proženje prekinitev.
 \end{itemize}
+
+To sekvenco pa sprožimo preko zunanjih signalov.
+
+Tako lahko s HLC modulom preko lastnih registrov ``R0''-``R3''\cite[Pogl.~26.4.6]{mcu-ref-manual} prenašamo podatke med CLB enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C1''-``C2' in pripadajočimi ``MATCH' vrednostmi.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{shema_hlc}}
@@ -232,8 +220,6 @@ virov, drugih CLB podkslopov (angl. tile) ali pa signal generira modul sam.
 Zadnji vir se uporablja le za simulacijske namene. Modul je v orodju ``CLB
 Tool'' (Pogl. \ref{sec:clb_tool}) zaradi postavitve predstavljen pod imenom
 ``BOUNDARY'' \cite[Pogl.~3.3]{clb-user-guide}.
-
-
 
 \section{Uporaba CLB}\label{sec:clb_tool}
 Za samo programiranje CLB koprocesorja v praksi je proizvajalec Texas
@@ -282,8 +268,6 @@ brskalniku (slika \ref{fig:clbtool_diagram})\cite[Pogl.~1]{clb-user-guide}.
     \label{fig:clbtool_diagram} 
 \end{figure} 
 
-
-
 \section{Zaključek}
 Za programerja FPGA vezij so stvari, opisane v tem članku verjetno precej
 domače. Lahko pa opazimo da sam CLB ni le FPGA vdelan v mikrokrmilnik, vendar
@@ -308,14 +292,10 @@ nek signal, vendar je samo zanj uporaba dodatnega čipa nesmiselna. Poleg tega
 pa je s stališča delodajalcev velikokrat bolj smiselno uporabiti rešitev, ki jo
 lahko implementira obstoječ kader, kot pa iskanje znanja izven podjetja.
 
-
-
 \section{Dodatno branje}
 Več informacij o sami implementaciji CLB je opisanih v \cite{clb-designing}. Za
 migracijo obstoječih FPGA projektov na CLB pa je precej dober uvod vir
 \cite{fpga-to-clb}.
-
-
 
 \printbibliography
 
