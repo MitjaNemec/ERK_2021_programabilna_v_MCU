@@ -33,9 +33,9 @@
 \begin{sloppypar}
 \title{Uporaba v mikrokrmilnik vgrajenih programirljivih logičnih vezij}
 
-\author{Andrej Kenda$^{1}$}
+\author{Andrej Kenda, Mitja Nemec}
 
-\affiliation{$^{1}$Ime in naslov organizacije prvega avtorja}
+\affiliation{Univerza v Ljubljani, Fakulteta za elektrotehniko, Tržaška 25, 1000 Ljubljana, Slovenija}
 
 \email{E-pošta: ak8655@student.uni-lj.si}
 
@@ -52,8 +52,6 @@ encoder is described, from which it is easier to deduce its useful value.
 \end{abstract}
 
 \selectlanguage{slovene}
-
-
 
 \section{Uvod}
 V prejšnjem članku smo pregledali zgradbo in delovanje sistema CLB (angl.
@@ -72,16 +70,22 @@ pristopov. Tudi implementacija, opisana v nadaljevanju ni bila očitna že od
 samega začetka, samo raziskovanje je vključevalo nemalo neuspelih poskusov.
 
 
-
 \section{Idejna zasnova}
-Zasnova simuliranega inkrementalnega dajalnika je prikazana na sliki
-\ref{fig:enkoder_zasnova}, kjer lahko opazimo da je na vhod CLB koprocesorja
-priključen kvadratni signal s polovičnim delovnim ciklom.
+Inkrementalni dajalnik je senzor kota gredi, ki generira dva digitalna signale A, B. 
+Signala sta pravokotne oblike z vklopnim razmerjem 50% in sta med seboj zamaknjena
+za 90°. Tako preko faznega premika med njima sklepamo o hitrosti vrtenja, frekvenca
+signalov pa nosi informacijo o hitrosti vrtenja.
 
-V CLB koprocesorju se vhodni signal uporabi za referenco in ``na'' njem
-proizvede dva izhodna signala, ki sta drug drugemu zamaknjena za 90°. Poleg
+Za simulacijo inkrementalnega dajalnika bomo za podatek o hitrosti vrtenja vzeli vhodni pravokotni signal, kateremu lahko spreminjamo frekvenco in ga generiramo s ustrezno periferno enoto, ki omogoča generiranje takih signalov (PWM števec).
+
+V CLB koprocesorju se vhodni signal uporabi kot vir takta in iz njega izpelje
+dva izhodna signala, ki sta drug drugemu zamaknjena za 90°. Poleg
 tega pa je potrebno dodati tudi sposobnost za spremembo smeri ``vrtenja'', kar
 pomeni da ob določenih pogojih začne ``prehitevati'' prej počasnejši signal.
+
+Zasnova simuliranega inkrementalnega dajalnika je prikazana na sliki
+\ref{fig:enkoder_zasnova}, kjer lahko opazimo da je na vhod CLB koprocesorja
+priključen kvadratni z vklopnim razmerjem 50%.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{enkoder_zasnova}}
@@ -90,17 +94,15 @@ pomeni da ob določenih pogojih začne ``prehitevati'' prej počasnejši signal.
     \label{fig:enkoder_zasnova} 
 \end{figure} 
 
-Projekt je zasnovan na predlogi, ki temelji na knjižnicah ``Bitfield''. Te v
-grobem vsebujejo le preproste funkcije in poimenovanje in poimenovanje
-registrov. V času pisanja pa je za delo s CLB koprocesorjem na voljo le
-``Driverlib'', ki vsebuje dokaj bolj kompleksne funkcije.
-
 
 \section{Nastavljanje CLB podkslopov}\label{sec:nastavitve_podsklopov}
-Zaradi postavitve projekta na knjižnicah ``Bitfield'' in temu pripadajočega
-izostanka orodja CLB Tool, je za konfiguracijo najlažja uporaba spletnega
-orodja ``SysConfig'', ki vsebuje povsem enak vmesnik, kot ga ima projekt s
-knjižnicami ``Driverlib'' \cite{sysconfig}.
+Nastavljanje CLB enote je najlažje preko uporabe orodja ``CLB Tool''. Le-to
+orodje generira usteezne C datoteke, ki jih vključimo v projekt s katerimi potem glavno jedro MCU-ja
+ustrezno nastavi CLB enoto. 
+
+V kolikor pa želimo CLB enoto vključiti v že narejen projekt, ki temelji na drugačni
+arhitekturi programske opreme, ki ne podpira uporabe ``CLB Tool'' orodja lahko omenjene 
+datoteke tudi generiramo s spletnim orodjem ``SysConfig'', ki vsebuje povsem enak vmesnik \cite{sysconfig}.
 
 \subsection{Splošne nastavitve}
 Ker CLB obravnavamo kot ločen sistam, je najlažje da se pred komunikacijo z
@@ -229,7 +231,7 @@ naravnem stanju prevzel logično 1, ob pritisku pa logično 0.
 \subsection{Generiranje kvadratnega signala}
 Za vhodni signal v CLB je uporabljen izhod iz ``eCAP'' modula, ki je v osnovi
 števec. Ta odločitev je nastala zgolj zaradi 32-bitnega števca v omenjenem
-modulu, kar omogoča bolj natančno določitev periode. Modul preko
+modulu, kar omogoča bolj natančno določitev periode predvsem pri nizkih frekvencah. Modul preko
 pulzno-širinske modulacije generira kvadratni signal s polovičnim delovnim
 ciklom. Implementacija funkcije za usposobitev ``eCAP'' modula v načinu
 ``apwm'' je prikazana na seznamu \ref{lst:ecap_init}.
@@ -301,8 +303,6 @@ signala v CLB koprocesor. S seznama \ref{lst:klic_enkoderja} lahko vidimo tudi
 klic prej omenjene funkcije ``CLB1\_init'', ki skrbi za nastavitev vseh ostalih
 parametrov CLB koprocesorja.
 
-
-
 \section{Zaključek}
 Iz praktičnega primera lahko razberemo, da je CLB koprocesor uporaben
 dodatek za marsikatero aplikacijo, kjer bi z njim lahko nadomestili FPGA čip. V
@@ -318,15 +318,12 @@ predstavljati težavnost pri obsežnih projektih.
 CLB pa žari pri majhnih projektih, kjer je bistvenega pomena hitra
 implementacija ter se manipulira z manjšim številom signalov. Prav tako je
 vsakemu programerju omogočena enostavna uporaba, brez da bi se popolnoma
-posvečal takšnim vezjim.
-
-
+posvečal takšnim vezjim. Predvsem pa povezave CLB-ja z ostalimi perifernimi napravami \cite{fpga-to-clb} omogočajo, da se CLB uporabi tudi samo za razširitev funkcionalnosti PWM naprave (e.g. SPI vodilu lahko dodamo kompenzacijo zamika signalvo med prenosom, združujemo več PWM signalov za PWM moduliran PWM signal, ...
 
 \section{Dodatno branje}
 Več informacij o sami implementaciji CLB je opisanih v \cite{clb-designing}. Za
-migracijo obstoječih FPGA projektov na CLB pa je precej dober uvod vir
+migracijo obstoječih FPGA projektov na CLB in različnih možnostih uporabe CBL-ja pa je precej dober uvod vir
 \cite{fpga-to-clb}.
-
 
 
 \printbibliography
