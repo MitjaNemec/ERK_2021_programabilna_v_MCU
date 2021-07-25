@@ -25,7 +25,8 @@
 
 \author{Andrej Kenda, Mitja Nemec}
 
-\affiliation{Univerza v Ljubljani, Fakulteta za elektrotehniko, Tržaška 25, 1000 Ljubljana, Slovenija}
+\affiliation{Univerza v Ljubljani, Fakulteta za elektrotehniko, Tržaška 25,
+             1000 Ljubljana, Slovenija}
 
 \email{E-pošta: ak8655@student.uni-lj.si}
 
@@ -34,7 +35,12 @@
 
 
 \begin{abstract}{Povzetek}
-FPGA integrated circuits are often indispensable in practice, but their implementation is often demanding. In this article, we explore one of the answers to this problem offered by the manufacturer Texas Instruments. In their microcontrollers, there is an additional coprocessor, called ``CLB''. The composition of said coprocessor is described, which is essential for the use of such system.
+FPGA integrated circuits are often indispensable in practice, but their
+implementation is often demanding. In this article, we explore one of the
+answers to this problem offered by the manufacturer Texas Instruments. In their
+microcontrollers, there is an additional coprocessor, called ``CLB''. The
+composition of said coprocessor is described, which is essential for the use of
+such system.
 \end{abstract}
 
 \selectlanguage{slovene}
@@ -44,67 +50,54 @@ FPGA integrated circuits are often indispensable in practice, but their implemen
 \section{Uvod}
 Pri oblikovanju vdelanih sistemov se zaradi preprostega programiranja in
 cenovne ugodnosti najpogosteje poslužujemo mikrokrmilnikov različnih
-proizvajalcev. Na začetku oblikovalnega procesa, v
-včasih preveliki ponudbi, izberemo čip, ki najbolje ustreza našim zahtevam.
+proizvajalcev. Na začetku oblikovalnega procesa, v včasih preveliki ponudbi,
+izberemo čip, ki najbolje ustreza našim zahtevam.
 
 Obstajajo pa tudi aplikacije, ki jim konvencionalni mikrokrmilniki niso kos. Tu
 nastopi iskanje drugačnih rešitev. Če imamo srečo, morda odkrijemo kakšen ASIC
 (angl. application specific integrated circuit), ki zadošča našim potrebam,
 vendar je na določenih področjih teh dokaj malo. V določenih aplikacijah nam ne
-preostane drugega kot uporaba FPGA (angl. field-programable
-gate array) vezja. Ti nam omogočajo postavitev sistema na nizkem nivoju, ki ga lahko
-prikrojimo natanko našim zahtevam. FPGA v veliko aplikacijah namestimo poleg
-prej omenjenega mikrokrmilnika in ga uporabimo kot dodaten procesor.
+preostane drugega kot uporaba FPGA (angl. field-programable gate array) vezja.
+Ti nam omogočajo postavitev sistema na nizkem nivoju, ki ga lahko prikrojimo
+natanko našim zahtevam. FPGA v veliko aplikacijah namestimo poleg prej
+omenjenega mikrokrmilnika in ga uporabimo kot dodaten procesor.
 
-Kljub temu, da so FPGA čipi precej zmogljivi, pa je njihova integracija v sistem težka.
-Kadra, ki ima globoko znanje takšnih sistemov je zaradi zahtevnosti
-precej malo. FPGA vezja namreč pogosto zahtevajo uporabo zunanjih RAM in FLASH vezji ter ADC in/ali DAC pretvornikov. Tako že načrtovanje tiskanega vezja okoli FPGA vezja zashteva več truda, dodaten trud pa zahteva tudi 
-komunikacija med posameznimi moduli. V kolikor pa je poleg poleg FPGA prisoten tudi mikrokrmilnik je tak sistem v primerjavi s sistemom, ki temelji samo in samo na mikrokrmilniku dražji tako za načrtovanje, razvoj programske opreme kot tudi za izdelavo. Proizvajalci FPGA vezji na te probleme odgovarjajo z vgradnjo mikrkrmilnika v samo FPGA vezje.
+Kljub temu, da so FPGA čipi precej zmogljivi, pa je njihova integracija v
+sistem težka.  Kadra, ki ima globoko znanje takšnih sistemov je zaradi
+zahtevnosti precej malo. FPGA vezja namreč pogosto zahtevajo uporabo zunanjih
+RAM in FLASH vezji ter ADC in/ali DAC pretvornikov. Tako že načrtovanje
+tiskanega vezja okoli FPGA vezja zashteva več truda, dodaten trud pa zahteva
+tudi komunikacija med posameznimi moduli. V kolikor pa je poleg poleg FPGA
+prisoten tudi mikrokrmilnik je tak sistem v primerjavi s sistemom, ki temelji
+samo in samo na mikrokrmilniku dražji tako za načrtovanje, razvoj programske
+opreme kot tudi za izdelavo. Proizvajalci FPGA vezji na te probleme odgovarjajo
+z vgradnjo mikrkrmilnika v samo FPGA vezje.
 
-Z druge strani na naštete težave odgovarja proizvajalec Texas Instruments s koprocesorjem
-CLB (angl. configurable logic block), ki je vdelan v nekaj njihovih
-mikrokrmilnikov. Ta naj bi po proizvajalčevih trditvah tako nadomestil dodaten
-FPGA (in s tem razvijalcu prihranil marsikatero uro), kot tudi omogočil
+Z druge strani na naštete težave odgovarja proizvajalec Texas Instruments s
+koprocesorjem CLB (angl. configurable logic block), ki je vdelan v nekaj
+njihovih mikrokrmilnikov. Ta naj bi po proizvajalčevih trditvah tako nadomestil
+dodaten FPGA (in s tem razvijalcu prihranil marsikatero uro), kot tudi omogočil
 programiranje s preprostim vmesnikom \cite{clb-intro}.
 
 
 \section{Predstavitev CLB}\label{sec:predstavitev}
-Slika \ref{fig:clb_shema} prikazuje shematski prikaz komponent v CLB
-koprocesorju, ki je del mikrokrmilnika F28379D, proizvajalca Texas Instruments.
-Na sliki je razvidno, da je omenjeni CLB sestavljen iz štirih med seboj enakih
-podsklopov (angl. Tile). Vsak podsklop je sestavljen iz procesorja (angl. CELL)
-ter vmesnika za ``priklop'' signalov iz matične naprave (angl. CPU I/F).
+CLB koprocesor, ki je del mikrokrmilnika F28379D, proizvajalca Texas
+Instruments je sestavljen iz štirih med seboj enakih podsklopov (angl. Tile).
+Vsak podsklop je sestavljen iz procesorja (angl. CELL) ter vmesnika za
+``priklop'' signalov iz matične naprave (angl. CPU I/F).
 
-% če se slika zamenja, se tale odstavek spremeni. Jaz ne bi omenjila lokalnega, globalnega in sistemskega vodila
-% ja na tem mestu že preveč specifično. Dovolj bo da se pove, da so vhodi v CLB lahko GPIO ali periferne naprave ali izhodi drugih delov(tile) CLB-ja. Prav tako izhodi.
-
-V CLB lahko vhodne signale pripeljemo preko treh vodil, lokalnega, globalnega
-in sistemskega vodila. Teh se za vhode v CLB poslužujemo glede na samo
-postavitev ostalih dodatkov, ki so poleg CLB-ja prisotni na čipu
-\cite[Pogl.~26.3]{mcu-ref-manual}. Posebnost omenjenega mikrokrmilnika je tudi
-prisotnost t.i. ``crossbar''-jev, ki omogočajo dovod vhodnih signalov preko
-lokalnega in globalnega vodila, ter odvod signalov iz CLB-ja. Ti signali lahko
-izvirajo iz različnih dodatkov, kot so eCAP, ePWM, GPIO... iz CLB-ja pa lahko v
-prav te dodatke tudi ``pripeljemo'' izhodni signal iz CLB-ja, kot vhod.
+Ti signali lahko izvirajo iz različnih dodatkov, kot so eCAP, ePWM, GPIO... iz
+CLB-ja pa lahko v prav te dodatke tudi ``pripeljemo'' izhodni signal, kot
+njihov vhod.
 
 Interakcija pa ni omejena le z dodatnimi napravami in matičnim procesorjem,
 temveč je mogoča tudi med različnimi podsklopi CLB-ja. Možno pa je tudi
 proženje prekinitev, na katere lahko procesor ustrezno reagira.
 
-% ta slika ima precej nepotrebnih informacij
-% mogoče bi jo zamenjal z Figure 2-5 iz spraco2a
-\begin{figure*}[t]
-    \begin{center}
-        \begin{minipage}[t]{12cm}
-            \includegraphics[width=12cm]{clb_shema}
-            \caption{Shematski prikaz komponent CLB koprocesorja
-                     \cite[Pogl.~26.2]{mcu-ref-manual}}
-            \label{fig:clb_shema}
-        \end{minipage}
-    \end{center}
-\end{figure*}
+% Prva slika je odstranjena, ker se mi zdi da nima neke prevelike vrednosti,
+% in da se da dobro razumeti tudi brez slike.
 
-% tole bi tudi veljalo razmisliti, da se zamenja z Figure 2-11 iz spraco2a
+% naslednja slika pa se zamenja z Figure 2-11 iz spraco2a
 
 \section{Zgradba CLB modulov}\label{sec:zgradbaclb}
 V poglavju \ref{sec:predstavitev} je omeneno, da je sam CLB sestavljen iz
@@ -123,18 +116,17 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
     \begin{center}
         \begin{minipage}[t]{12cm}
             \includegraphics[width=12cm]{clb_moduli}
-            \caption{Shematski prikaz komponent CLB koprocesorja
-                     \cite[Pogl.~26.2]{mcu-ref-manual}}
+            \caption{Shematski prikaz modulov na podsklopu CLB koprocesorja
+                     \cite[Pogl.~2.3.3]{fpga-to-clb}}
             \label{fig:clb_moduli}
         \end{minipage}
     \end{center}
 \end{figure*}
 
 \subsection{LUT moduli}\label{sec:lut}
-LUT4 modul omogoča izvajanje logičnih operacij nad vhodnimi signali 
-(slika \ref{fig:lut4} - ``IN0''-``IN3''). Podprte logične operacije so ``AND'', ``OR'',
-``NOT'' in ``XOR''.
-\cite[Pogl.~3.3]{clb-user-guide}.
+LUT4 modul omogoča izvajanje logičnih operacij nad vhodnimi signali (slika
+\ref{fig:lut4} - ``IN0''-``IN3''). Podprte logične operacije so ``AND'',
+``OR'', ``NOT'' in ``XOR''.  \cite[Pogl.~3.3]{clb-user-guide}.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{shema_lut}}
@@ -195,7 +187,9 @@ kot štirivhodni LUT modul.
 \end{figure} 
 
 \subsection{HLC modul}\label{sec:hlc}
-HLC modul je za razliko od ostale naprave veliko bolj kompleksen \ref{fig:hlc}. Gre pravzaprav za zelo okrnjeno procesno jedro, kateremu lahko sprogramiramo rudimentarno sekvenco ukazov v zbirniku\cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
+HLC modul je za razliko od ostale naprave veliko bolj kompleksen \ref{fig:hlc}.
+Gre pravzaprav za zelo okrnjeno procesno jedro, kateremu lahko sprogramiramo
+rudimentarno sekvenco ukazov v zbirniku\cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
 \begin{itemize}
     \item ADD/SUB - seštevanje in odštevanje,
     \item MOV/MOV\_T1/MOV\_T2 - premikanje,
@@ -205,7 +199,10 @@ HLC modul je za razliko od ostale naprave veliko bolj kompleksen \ref{fig:hlc}. 
 
 To sekvenco pa sprožimo preko zunanjih signalov.
 
-Tako lahko s HLC modulom preko lastnih registrov ``R0''-``R3''\cite[Pogl.~26.4.6]{mcu-ref-manual} prenašamo podatke med CLB enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C1''-``C2' in pripadajočimi ``MATCH' vrednostmi.
+Tako lahko s HLC modulom preko lastnih registrov
+``R0''-``R3''\cite[Pogl.~26.4.6]{mcu-ref-manual} prenašamo podatke med CLB
+enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C1''-``C2'
+in pripadajočimi ``MATCH' vrednostmi.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{shema_hlc}}

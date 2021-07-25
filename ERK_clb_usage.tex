@@ -71,12 +71,15 @@ samega začetka, samo raziskovanje je vključevalo nemalo neuspelih poskusov.
 
 
 \section{Idejna zasnova}
-Inkrementalni dajalnik je senzor kota gredi, ki generira dva digitalna signale A, B. 
-Signala sta pravokotne oblike z vklopnim razmerjem 50% in sta med seboj zamaknjena
-za 90°. Tako preko faznega premika med njima sklepamo o hitrosti vrtenja, frekvenca
-signalov pa nosi informacijo o hitrosti vrtenja.
+Inkrementalni dajalnik je senzor kota gredi, ki generira dva digitalna signale
+A, B.  Signala sta pravokotne oblike z vklopnim razmerjem 50\% in sta med seboj
+zamaknjena za 90°. Tako preko faznega premika med njima sklepamo o hitrosti
+vrtenja, frekvenca signalov pa nosi informacijo o hitrosti vrtenja.
 
-Za simulacijo inkrementalnega dajalnika bomo za podatek o hitrosti vrtenja vzeli vhodni pravokotni signal, kateremu lahko spreminjamo frekvenco in ga generiramo s ustrezno periferno enoto, ki omogoča generiranje takih signalov (PWM števec).
+Za simulacijo inkrementalnega dajalnika bomo za podatek o hitrosti vrtenja
+vzeli vhodni pravokotni signal, kateremu lahko spreminjamo frekvenco in ga
+generiramo s ustrezno periferno enoto, ki omogoča generiranje takih signalov
+(PWM števec).
 
 V CLB koprocesorju se vhodni signal uporabi kot vir takta in iz njega izpelje
 dva izhodna signala, ki sta drug drugemu zamaknjena za 90°. Poleg
@@ -97,12 +100,13 @@ priključen kvadratni z vklopnim razmerjem 50%.
 
 \section{Nastavljanje CLB podkslopov}\label{sec:nastavitve_podsklopov}
 Nastavljanje CLB enote je najlažje preko uporabe orodja ``CLB Tool''. Le-to
-orodje generira usteezne C datoteke, ki jih vključimo v projekt s katerimi potem glavno jedro MCU-ja
-ustrezno nastavi CLB enoto. 
+orodje generira usteezne C datoteke, ki jih vključimo v projekt s katerimi
+potem glavno jedro MCU-ja ustrezno nastavi CLB enoto. 
 
-V kolikor pa želimo CLB enoto vključiti v že narejen projekt, ki temelji na drugačni
-arhitekturi programske opreme, ki ne podpira uporabe ``CLB Tool'' orodja lahko omenjene 
-datoteke tudi generiramo s spletnim orodjem ``SysConfig'', ki vsebuje povsem enak vmesnik \cite{sysconfig}.
+V kolikor pa želimo CLB enoto vključiti v že narejen projekt, ki temelji na
+drugačni arhitekturi programske opreme, ki ne podpira uporabe ``CLB Tool''
+orodja lahko omenjene datoteke tudi generiramo s spletnim orodjem
+``SysConfig'', ki vsebuje povsem enak vmesnik \cite{sysconfig}.
 
 \subsection{Splošne nastavitve}
 Ker CLB obravnavamo kot ločen sistam, je najlažje da se pred komunikacijo z
@@ -231,10 +235,10 @@ naravnem stanju prevzel logično 1, ob pritisku pa logično 0.
 \subsection{Generiranje kvadratnega signala}
 Za vhodni signal v CLB je uporabljen izhod iz ``eCAP'' modula, ki je v osnovi
 števec. Ta odločitev je nastala zgolj zaradi 32-bitnega števca v omenjenem
-modulu, kar omogoča bolj natančno določitev periode predvsem pri nizkih frekvencah. Modul preko
-pulzno-širinske modulacije generira kvadratni signal s polovičnim delovnim
-ciklom. Implementacija funkcije za usposobitev ``eCAP'' modula v načinu
-``apwm'' je prikazana na seznamu \ref{lst:ecap_init}.
+modulu, kar omogoča bolj natančno določitev periode predvsem pri nizkih
+frekvencah. Modul preko pulzno-širinske modulacije generira kvadratni signal s
+polovičnim delovnim ciklom. Implementacija funkcije za usposobitev ``eCAP''
+modula v načinu ``apwm'' je prikazana na seznamu \ref{lst:ecap_init}.
 
 \filbreak
 \begin{lstlisting}[language=C,
@@ -318,12 +322,16 @@ predstavljati težavnost pri obsežnih projektih.
 CLB pa žari pri majhnih projektih, kjer je bistvenega pomena hitra
 implementacija ter se manipulira z manjšim številom signalov. Prav tako je
 vsakemu programerju omogočena enostavna uporaba, brez da bi se popolnoma
-posvečal takšnim vezjim. Predvsem pa povezave CLB-ja z ostalimi perifernimi napravami \cite{fpga-to-clb} omogočajo, da se CLB uporabi tudi samo za razširitev funkcionalnosti PWM naprave (e.g. SPI vodilu lahko dodamo kompenzacijo zamika signalvo med prenosom, združujemo več PWM signalov za PWM moduliran PWM signal, ...
+posvečal takšnim vezjim. Predvsem pa povezave CLB-ja z ostalimi perifernimi
+napravami \cite{fpga-to-clb} omogočajo, da se CLB uporabi tudi samo za
+razširitev funkcionalnosti PWM naprave (e.g. SPI vodilu lahko dodamo
+kompenzacijo zamika signalvo med prenosom, združujemo več PWM signalov za PWM
+moduliran PWM signal, ...
 
 \section{Dodatno branje}
 Več informacij o sami implementaciji CLB je opisanih v \cite{clb-designing}. Za
-migracijo obstoječih FPGA projektov na CLB in različnih možnostih uporabe CBL-ja pa je precej dober uvod vir
-\cite{fpga-to-clb}.
+migracijo obstoječih FPGA projektov na CLB in različnih možnostih uporabe
+CBL-ja pa je precej dober uvod vir \cite{fpga-to-clb}.
 
 
 \printbibliography
