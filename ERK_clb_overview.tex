@@ -35,12 +35,7 @@
 
 
 \begin{abstract}{Povzetek}
-FPGA integrated circuits are often indispensable in practice, but their
-implementation is often demanding. In this article, we explore one of the
-answers to this problem offered by the manufacturer Texas Instruments. In their
-microcontrollers, there is an additional coprocessor, called ``CLB''. The
-composition of said coprocessor is described, which is essential for the use of
-such system.
+FPGA integrated circuits are often indispensable in practice, but their integration into the sysdtem is often demanding and costly. In this article, we explore one of the answers to this problem offered by the manufacturer Texas Instruments. In their microcontrollers, there is an additional coprocessor, called ``CLB'', which is similar to a FPGA. The article offers an overview of said coprocessor, its detailed structure, how it is connected to the rest of the microcontroller and its capabilities.
 \end{abstract}
 
 \selectlanguage{slovene}
@@ -55,7 +50,7 @@ izberemo čip, ki najbolje ustreza našim zahtevam.
 
 Obstajajo pa tudi aplikacije, ki jim konvencionalni mikrokrmilniki niso kos. Tu
 nastopi iskanje drugačnih rešitev. Če imamo srečo, morda odkrijemo kakšen ASIC
-(angl. application specific integrated circuit), ki zadošča našim potrebam,
+(angl. application specific integrated circuit), ki ustreza našim potrebam,
 vendar je na določenih področjih teh dokaj malo. V določenih aplikacijah nam ne
 preostane drugega kot uporaba FPGA (angl. field-programable gate array) vezja.
 Ti nam omogočajo postavitev sistema na nizkem nivoju, ki ga lahko prikrojimo
@@ -66,7 +61,7 @@ Kljub temu, da so FPGA čipi precej zmogljivi, pa je njihova integracija v
 sistem težka.  Kadra, ki ima globoko znanje takšnih sistemov je zaradi
 zahtevnosti precej malo. FPGA vezja namreč pogosto zahtevajo uporabo zunanjih
 RAM in FLASH vezji ter ADC in/ali DAC pretvornikov. Tako že načrtovanje
-tiskanega vezja okoli FPGA vezja zashteva več truda, dodaten trud pa zahteva
+tiskanega vezja okoli FPGA vezja zahteva več truda, dodaten trud pa zahteva
 tudi komunikacija med posameznimi moduli. V kolikor pa je poleg poleg FPGA
 prisoten tudi mikrokrmilnik je tak sistem v primerjavi s sistemom, ki temelji
 samo in samo na mikrokrmilniku dražji tako za načrtovanje, razvoj programske
@@ -86,18 +81,13 @@ Instruments je sestavljen iz štirih med seboj enakih podsklopov (angl. Tile).
 Vsak podsklop je sestavljen iz procesorja (angl. CELL) ter vmesnika za
 ``priklop'' signalov iz matične naprave (angl. CPU I/F).
 
-Ti signali lahko izvirajo iz različnih dodatkov, kot so eCAP, ePWM, GPIO... iz
-CLB-ja pa lahko v prav te dodatke tudi ``pripeljemo'' izhodni signal, kot
+Ti signali lahko izvirajo iz različnih perifernih naprav, kot so eCAP, ePWM, GPIO... iz
+CLB-ja pa lahko v prav te periferne naprave tudi ``pripeljemo'' izhodni signal, kot
 njihov vhod.
 
 Interakcija pa ni omejena le z dodatnimi napravami in matičnim procesorjem,
 temveč je mogoča tudi med različnimi podsklopi CLB-ja. Možno pa je tudi
 proženje prekinitev, na katere lahko procesor ustrezno reagira.
-
-% Prva slika je odstranjena, ker se mi zdi da nima neke prevelike vrednosti,
-% in da se da dobro razumeti tudi brez slike.
-
-% naslednja slika pa se zamenja z Figure 2-11 iz spraco2a
 
 \section{Zgradba CLB modulov}\label{sec:zgradbaclb}
 V poglavju \ref{sec:predstavitev} je omeneno, da je sam CLB sestavljen iz
@@ -124,9 +114,9 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
 \end{figure*}
 
 \subsection{LUT moduli}\label{sec:lut}
-LUT4 modul omogoča izvajanje logičnih operacij nad vhodnimi signali (slika
+``LUT4'' modul omogoča izvajanje logičnih operacij nad vhodnimi signali (slika
 \ref{fig:lut4} - ``IN0''-``IN3''). Podprte logične operacije so ``AND'',
-``OR'', ``NOT'' in ``XOR''.  \cite[Pogl.~3.3]{clb-user-guide}.
+``OR'', ``NOT'' in ``XOR''.  \cite[Pogl.~3.3]{clb-user-guide}. 
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{shema_lut}}
@@ -135,13 +125,11 @@ LUT4 modul omogoča izvajanje logičnih operacij nad vhodnimi signali (slika
     \label{fig:lut4} 
 \end{figure} 
 
-Razlika med ``LUT4'' in izhodnim ``LUT3'' modulom je le, da ima slednji tri
-namesto štirih vhodov, ter je njegov izhod vezan direktno na izhod CLB-ja, kar
-je tudi ena izmed njegovih funkcij \cite[Pogl.~26.4.4-26.4.5]{mcu-ref-manual}.
+``LUT3'' modul je enak ``LUT4'' moduli, le da ima tri namesto štirih vhodov, ter njegov izhod predstavlja izhod podsklopa (``tile'') \cite[Pogl.~26.4.4-26.4.5]{mcu-ref-manual}.
 
 \subsection{Števci}
-Števec je precej kompleksen modul v CLB-ju, ki ga lahko nastavimo za delovanje
-kot števec, seštevalnik, komparator ali operator zamika. S slike
+Števec je precej kompleksen modul v CLB-ju, ki omogoča več različnih načinov delovanja.
+Lako deluje kot števec/komparator, samo ko komparator, ki primerja dve 32-bitni števili, ali pa kot aritmetična enota, ki prišteva oz. odšteva dve števili ali pa nad enim številom zvede opreacijo dvojiškega premika v levo oz. desno. S slike
 \ref{fig:stevec} je moč razbrati štiri funkcijske vhode; ``RESET'', ``MODE 0'',
 ``MODE 1'' in ``EVENT''. ``RESET'' ob visoki vrednosti
 števec postavi na vrednost 0, ``MODE 0'' ob visoki vrednosti omogoči štetje,
@@ -167,13 +155,12 @@ in začne šteti od 0.
 \cite[Pogl.~26.4.2]{mcu-ref-manual}.
 
 \subsection{FSM moduli}
-FSM modul omogoča implementacijo avtomata stanj. Le to se izvede preko dveh
-internih LUT blokov; ``Output LUT'', ``S0 Next State LUT'' in ``S1 Next State
-LUT'' (slika \ref{fig:fsm}), te so po zgradbi povsem enake opisanim v poglavju
-\ref{sec:lut}. Za implementacijo avtomata stanj uporabljamo le slednji LUT
-tabeli, ki služita interni modulaciji signalov in operirata z zunanjima
+FSM modul omogoča implementacijo avtomata stanj. Le ta je implementiran z dvema
+LUT blokoma: ``S0 Next State LUT'' in ``S1 Next State
+LUT'' (slika \ref{fig:fsm}), ki sta po zgradbi povsem enake opisanim v poglavju
+\ref{sec:lut}. Ta služita interni modulaciji signalov in operirata z zunanjima
 signaloma ``EXT\_IN0'', ``EXT\_IN1'' in vhodoma ``S0'' in ``S1'', ki prevzameta
-prejšnjo vrednost izhoda pripadajoče tabele.
+prejšnjo vrednost izhoda pripadajoče tabele. Izhod avtomata stanj pa določa ``Output LUT'' tabela.
 
 Če aplikacija ne potrebuje uporabe FSM modula, se lahko poslužimo še vhodov
 ``EXTRA\_EXT\_IN0'' in ``EXTRA\_EXT\_IN1''. V tem primeru celoten modul deluje
@@ -201,8 +188,8 @@ To sekvenco pa sprožimo preko zunanjih signalov.
 
 Tako lahko s HLC modulom preko lastnih registrov
 ``R0''-``R3''\cite[Pogl.~26.4.6]{mcu-ref-manual} prenašamo podatke med CLB
-enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C1''-``C2'
-in pripadajočimi ``MATCH' vrednostmi.
+enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C1''-``C2''
+in pripadajočimi ``MATCH'' vrednostmi.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{shema_hlc}}
