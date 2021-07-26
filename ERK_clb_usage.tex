@@ -28,14 +28,14 @@
 \def\footnotemark{}
 
 
-
 \begin{document}
 \begin{sloppypar}
 \title{Uporaba v mikrokrmilnik vgrajenih programirljivih logičnih vezij}
 
 \author{Andrej Kenda, Mitja Nemec}
 
-\affiliation{Univerza v Ljubljani, Fakulteta za elektrotehniko, Tržaška 25, 1000 Ljubljana, Slovenija}
+\affiliation{Univerza v Ljubljani, Fakulteta za elektrotehniko, Tržaška 25,
+             1000 Ljubljana, Slovenija}
 
 \email{E-pošta: ak8655@student.uni-lj.si}
 
@@ -44,11 +44,17 @@
 
 
 \begin{abstract}{Povzetek}
-Configurable Logic Block (CLB) is a response from Texas Instruments to the often difficult implementation of FPGA integrated circuits. This article presents how CLB can be used in order to implement an emulation of incremental encoder signals. In addition to presentation how the emulition is designed, the paper discusses how the CLB behaves in practice and what are the experiences using the tooling to program the CLB.
+Configurable Logic Block (CLB) is a response from Texas Instruments to the
+often difficult implementation of FPGA integrated circuits. This article
+presents how CLB can be used in order to implement an emulation of incremental
+encoder signals. In addition to presentation how the emulition is designed, the
+paper discusses how the CLB behaves in practice and what are the experiences
+using the tooling to program the CLB.
 
 \end{abstract}
 
 \selectlanguage{slovene}
+
 
 \section{Uvod}
 V prejšnjem članku smo pregledali zgradbo in delovanje sistema CLB (angl.
@@ -62,11 +68,11 @@ programu. Poleg generirane kode pa nam omogoča vpogled v vse podsklope preko
 simulacijskih datotek ter dodatnega diagrama povezav.
 
 Primer praktične uporabe CLB koprocesorja je emulacija inkrementalnega
-dajalnika. Emulacija inkrementalnega dajalnika je uporabna predvsem v HIL in PHIL sistemih 
-% dodaj citat dveh virov
-% G. F. Lauss, M. O. Faruque, K. Schoder, C. Dufour, A. Viehweider, and J. Langston, “Characteristics and Design of Power Hardware-in-the-Loop Simulations for Electrical Power Systems,” IEEE Transactions on Industrial Electronics, vol. 63, no. 1, pp. 406–417, Jan. 2016, doi: 10.1109/TIE.2015.2464308.
-% J. Nibert, M. E. Herniter, and Z. Chambers, “Model-Based System Design for MIL, SIL, and HIL,” World Electric Vehicle Journal, vol. 5, no. 4, Art. no. 4, Dec. 2012, doi: 10.3390/wevj5041121.
-kateri so v zadnjem času vedno bolj pogosto v uporabi za preizkušanje elektronike zakrmiljenje/regulacijo električnih strojev.
+dajalnika. Emulacija inkrementalnega dajalnika je uporabna predvsem v HIL in
+PHIL sistemih \cite{lauss} \cite{nibert}, kateri so v zadnjem času vedno bolj
+pogosto v uporabi za preizkušanje elektronike zakrmiljenje/regulacijo
+električnih strojev.
+
 
 \section{Idejna zasnova}
 Inkrementalni dajalnik je senzor kota gredi, ki generira dva digitalna signala
@@ -111,15 +117,11 @@ orodja lahko omenjene datoteke tudi generiramo s spletnim orodjem
 ``SysConfig'', ki vsebuje povsem enak vmesnik \cite{sysconfig}.
 
 \subsection{Splošne nastavitve}
-Ker CLB obravnavamo kot ločen sistam, je najlažje da se pred komunikacijo z
-% kaj je komunikacija z matično napravo? MCU. 
-% potem bi tekst raje šel takole:
-% Ker je v našem primeru CLB enota uporabljane relativno samostojno je pri razvoju
-% programa za CLB najlažje uporabiti simulacijo. 
-matično napravo poslužujemo simulacije. V ta namen je v orodju ``CLB Tool'' za
-modul ``BOUNDARY'' na voljo možnost simuliranega kvadratnega signala. Za
-implementacijo inkrementalnega dajalnika je kot simuliran vhod definiran vhod
-in2, kar prikazuje tudi slika \ref{fig:clbtool_boundary}.
+Ker je v našem primeru CLB enota uporabljana relativno samostojno je pri
+razvoju programa za CLB najlažje uporabiti simulacijo.  V ta namen je v orodju
+``CLB Tool'' za modul ``BOUNDARY'' na voljo možnost simuliranega kvadratnega
+signala. Za implementacijo inkrementalnega dajalnika je kot simuliran vhod
+definiran vhod in2, kar prikazuje tudi slika \ref{fig:clbtool_boundary}.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{clbtool_boundary}}
@@ -230,6 +232,7 @@ Celotna shema končne implementacije je prikazana na sliki
     \label{fig:koncna_shema}
 \end{figure}
 
+
 \section{Vhodni signali v CLB}
 vhodni signali v poglavju \ref{sec:nastavitve_podsklopov} so bili za čas
 nastavljanja podsklopov zaradi enostavnejšega dela le simulirani. Za delovanje
@@ -237,8 +240,6 @@ pa je potrebno signal speljati iz enega od modulov na integriranem vezju. Kot
 je razbrati iz poglavja \ref{sec:nastavljanje_clb}, potrebujemo kvadratni
 vhodni signal z nastavljivo frekvenco ter signal za obračanje smeri, ki bo v
 naravnem stanju prevzel logično 1, ob pritisku pa logično 0.
-
-% daj uredi prelom strani tukaj
 
 \subsection{Generiranje kvadratnega signala}
 Za vhodni signal v CLB je uporabljen izhod iz ``eCAP'' modula, ki je v osnovi
@@ -248,7 +249,6 @@ frekvencah. Modul preko pulzno-širinske modulacije generira kvadratni signal s
 polovičnim delovnim ciklom. Implementacija funkcije za usposobitev ``eCAP''
 modula v načinu ``apwm'' je prikazana na seznamu \ref{lst:ecap_init}.
 
-\filbreak
 \begin{lstlisting}[language=C,
                    caption={Implementacija funkcije za usposobitev ``eCAP'' 
                             modula v ``apwm'' načinu},
@@ -272,12 +272,12 @@ void ECAP_apwm_init(float freq, float duty)
 }
 \end{lstlisting}
 
-Opazimo lahko, da je za nastavitev delovanja potrebno določiti le dolžino periode in
-primerjalne vrednosti. Slednja je namenjena preklopu iz visokega v nizko stanje
-pri generiranju ``PWM'' signala. Preko te funkcije tako generiramo signal z
-določitvijo frekvence in delovnega cikla (``freq'' in ``duty'') Za boljši
-vpogled v sistem je preko ``GPIO'' modula ta signal speljan tudi iz naprave,
-kjer ga lahko opazujemo z osciloskopom ali logičnim analizatorjem.
+Opazimo lahko, da je za nastavitev delovanja potrebno določiti le dolžino
+periode in primerjalne vrednosti. Slednja je namenjena preklopu iz visokega v
+nizko stanje pri generiranju ``PWM'' signala. Preko te funkcije tako generiramo
+signal z določitvijo frekvence in delovnega cikla (``freq'' in ``duty'') Za
+boljši vpogled v sistem je preko ``GPIO'' modula ta signal speljan tudi iz
+naprave, kjer ga lahko opazujemo z osciloskopom ali logičnim analizatorjem.
 
 Ta signal je nato priključen na lokalni vhod 2 CLB koprocesorja, ter opravlja
 vlogo prej simuliranega vhoda ``in2''.
@@ -288,12 +288,14 @@ Za obračanje smeri je bil izbran signal ``GPIO24''. Ta je nastavljen kot vhod z
 vhodnega ``X-bar''-a in globalnega vodila je priključen na vhod 0 CLB
 koprocesorja in s tem prevzema mesto prej simuliranega signala ``in0''.
 
+
 \section{Delovanje inkrementalnega dajalnika}
 Za lažjo uporabo simuliranega inkrementalnega dajalnika so vse nastavitve, ki
 niso del orodja ``CLB Tool'' zapakirane v funkciji ``CLB1\_init''. Za končnega
 uporabnika pa je vse skupaj razkrito v funkciji, prikazani na seznamu
 \ref{lst:klic_enkoderja}
 
+\filbreak
 \begin{lstlisting}[language=C,
                    caption={Implementacija funkcije za nastavitev 
                             inkrementalnega dajalnika},
@@ -315,6 +317,7 @@ signala v CLB koprocesor. S seznama \ref{lst:klic_enkoderja} lahko vidimo tudi
 klic prej omenjene funkcije ``CLB1\_init'', ki skrbi za nastavitev vseh ostalih
 parametrov CLB koprocesorja.
 
+
 \section{Zaključek}
 Iz praktičnega primera lahko razberemo, da je CLB koprocesor uporaben
 dodatek za marsikatero aplikacijo, kjer bi z njim lahko nadomestili FPGA čip. V
@@ -333,7 +336,9 @@ vsakemu programerju omogočena enostavna uporaba, brez da bi se popolnoma
 posvečal takšnim vezjem. Predvsem pa povezave CLB-ja z ostalimi perifernimi
 napravami \cite{fpga-to-clb} omogočajo, da se CLB uporabi tudi samo za
 razširitev funkcionalnosti periferne naprave (e.g. SPI vodilu lahko dodamo
-kompenzacijo zamika signalov med prenosom, združujemo več PWM signalov za generiranje prižilnih pulzov pri eksotičnih toplogijah močnostne elektronike, ...
+kompenzacijo zamika signalov med prenosom, združujemo več PWM signalov za
+generiranje prižilnih pulzov pri eksotičnih toplogijah močnostne elektronike...
+
 
 \section{Dodatno branje}
 Več informacij o sami implementaciji CLB je opisanih v \cite{clb-designing}. Za
@@ -342,7 +347,6 @@ CBL-ja pa je precej dober uvod vir \cite{fpga-to-clb}.
 
 
 \printbibliography
-
 
 
 \end{sloppypar}

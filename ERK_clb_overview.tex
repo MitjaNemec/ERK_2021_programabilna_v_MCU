@@ -35,7 +35,13 @@
 
 
 \begin{abstract}{Povzetek}
-FPGA integrated circuits are often indispensable in practice, but their integration into the sysdtem is often demanding and costly. In this article, we explore one of the answers to this problem offered by the manufacturer Texas Instruments. In their microcontrollers, there is an additional coprocessor, called ``CLB'', which is similar to a FPGA. The article offers an overview of said coprocessor, its detailed structure, how it is connected to the rest of the microcontroller and its capabilities.
+FPGA integrated circuits are often indispensable in practice, but their
+integration into the sysdtem is often demanding and costly. In this article, we
+explore one of the answers to this problem offered by the manufacturer Texas
+Instruments. In their microcontrollers, there is an additional coprocessor,
+called ``CLB'', which is similar to a FPGA. The article offers an overview of
+said coprocessor, its detailed structure, how it is connected to the rest of
+the microcontroller and its capabilities.
 \end{abstract}
 
 \selectlanguage{slovene}
@@ -81,9 +87,9 @@ Instruments je sestavljen iz štirih med seboj enakih podsklopov (angl. Tile).
 Vsak podsklop je sestavljen iz procesorja (angl. CELL) ter vmesnika za
 ``priklop'' signalov iz matične naprave (angl. CPU I/F).
 
-Ti signali lahko izvirajo iz različnih perifernih naprav, kot so eCAP, ePWM, GPIO... iz
-CLB-ja pa lahko v prav te periferne naprave tudi ``pripeljemo'' izhodni signal, kot
-njihov vhod.
+Ti signali lahko izvirajo iz različnih perifernih naprav, kot so eCAP, ePWM,
+GPIO... iz CLB-ja pa lahko v prav te periferne naprave tudi ``pripeljemo''
+izhodni signal, kot njihov vhod.
 
 Interakcija pa ni omejena le z dodatnimi napravami in matičnim procesorjem,
 temveč je mogoča tudi med različnimi podsklopi CLB-ja. Možno pa je tudi
@@ -125,13 +131,17 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
     \label{fig:lut4} 
 \end{figure} 
 
-``LUT3'' modul je enak ``LUT4'' moduli, le da ima tri namesto štirih vhodov, ter njegov izhod predstavlja izhod podsklopa (``tile'') \cite[Pogl.~26.4.4-26.4.5]{mcu-ref-manual}.
+``LUT3'' modul je enak ``LUT4'' moduli, le da ima tri namesto štirih vhodov,
+ter njegov izhod predstavlja izhod podsklopa (``tile'')
+\cite[Pogl.~26.4.4-26.4.5]{mcu-ref-manual}.
 
 \subsection{Števci}
-Števec je precej kompleksen modul v CLB-ju, ki omogoča več različnih načinov delovanja.
-Lako deluje kot števec/komparator, samo ko komparator, ki primerja dve 32-bitni števili, ali pa kot aritmetična enota, ki prišteva oz. odšteva dve števili ali pa nad enim številom zvede opreacijo dvojiškega premika v levo oz. desno. S slike
-\ref{fig:stevec} je moč razbrati štiri funkcijske vhode; ``RESET'', ``MODE 0'',
-``MODE 1'' in ``EVENT''. ``RESET'' ob visoki vrednosti
+Števec je precej kompleksen modul v CLB-ju, ki omogoča več različnih načinov
+delovanja.  Lako deluje kot števec/komparator, samo ko komparator, ki primerja
+dve 32-bitni števili, ali pa kot aritmetična enota, ki prišteva oz. odšteva dve
+števili ali pa nad enim številom zvede opreacijo dvojiškega premika v levo oz.
+desno. S slike \ref{fig:stevec} je moč razbrati štiri funkcijske vhode;
+``RESET'', ``MODE 0'', ``MODE 1'' in ``EVENT''. ``RESET'' ob visoki vrednosti
 števec postavi na vrednost 0, ``MODE 0'' ob visoki vrednosti omogoči štetje,
 ``MODE 1'' nastavi smer štetja (visoko - navzgor, nizko - navzdol), signal
 ``EVENT'' pa ob pozitivnem robu sproži dogodek, na katerega ta odreagira z
@@ -160,7 +170,8 @@ LUT blokoma: ``S0 Next State LUT'' in ``S1 Next State
 LUT'' (slika \ref{fig:fsm}), ki sta po zgradbi povsem enake opisanim v poglavju
 \ref{sec:lut}. Ta služita interni modulaciji signalov in operirata z zunanjima
 signaloma ``EXT\_IN0'', ``EXT\_IN1'' in vhodoma ``S0'' in ``S1'', ki prevzameta
-prejšnjo vrednost izhoda pripadajoče tabele. Izhod avtomata stanj pa določa ``Output LUT'' tabela.
+prejšnjo vrednost izhoda pripadajoče tabele. Izhod avtomata stanj pa določa
+``Output LUT'' tabela.
 
 Če aplikacija ne potrebuje uporabe FSM modula, se lahko poslužimo še vhodov
 ``EXTRA\_EXT\_IN0'' in ``EXTRA\_EXT\_IN1''. V tem primeru celoten modul deluje
@@ -204,6 +215,7 @@ virov, drugih CLB podkslopov (angl. tile) ali pa signal generira modul sam.
 Zadnji vir se uporablja le za simulacijske namene. Modul je v orodju ``CLB
 Tool'' (Pogl. \ref{sec:clb_tool}) zaradi postavitve predstavljen pod imenom
 ``BOUNDARY'' \cite[Pogl.~3.3]{clb-user-guide}.
+
 
 \section{Uporaba CLB}\label{sec:clb_tool}
 Za samo programiranje CLB koprocesorja v praksi je proizvajalec Texas
@@ -252,6 +264,7 @@ brskalniku (slika \ref{fig:clbtool_diagram})\cite[Pogl.~1]{clb-user-guide}.
     \label{fig:clbtool_diagram} 
 \end{figure} 
 
+
 \section{Zaključek}
 Za programerja FPGA vezij so stvari, opisane v tem članku verjetno precej
 domače. Lahko pa opazimo da sam CLB ni le FPGA vdelan v mikrokrmilnik, vendar
@@ -281,8 +294,8 @@ Več informacij o sami implementaciji CLB je opisanih v \cite{clb-designing}. Za
 migracijo obstoječih FPGA projektov na CLB pa je precej dober uvod vir
 \cite{fpga-to-clb}.
 
-\printbibliography
 
+\printbibliography
 
 
 \end{sloppypar}
