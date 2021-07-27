@@ -131,7 +131,7 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
     \label{fig:lut4} 
 \end{figure} 
 
-``LUT3'' modul je enak ``LUT4'' moduli, le da ima tri namesto štirih vhodov,
+``LUT3'' modul je enak ``LUT4'' modulu, le da ima tri namesto štirih vhodov,
 ter njegov izhod predstavlja izhod podsklopa (``tile'')
 \cite[Pogl.~26.4.4-26.4.5]{mcu-ref-manual}.
 
@@ -185,9 +185,9 @@ kot štirivhodni LUT modul.
 \end{figure} 
 
 \subsection{HLC modul}\label{sec:hlc}
-HLC modul je za razliko od ostale naprave veliko bolj kompleksen \ref{fig:hlc}.
+HLC modul je za razliko od ostale naprave veliko bolj kompleksen (slika \ref{fig:hlc}).
 Gre pravzaprav za zelo okrnjeno procesno jedro, kateremu lahko sprogramiramo
-rudimentarno sekvenco ukazov v zbirniku\cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
+rudimentarno sekvenco ukazov v zbirniku \cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
 \begin{itemize}
     \item ADD/SUB - seštevanje in odštevanje,
     \item MOV/MOV\_T1/MOV\_T2 - premikanje,
@@ -198,7 +198,7 @@ rudimentarno sekvenco ukazov v zbirniku\cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
 To sekvenco pa sprožimo preko zunanjih signalov.
 
 Tako lahko s HLC modulom preko lastnih registrov
-``R0''-``R3''\cite[Pogl.~26.4.6]{mcu-ref-manual} prenašamo podatke med CLB
+``R0''-``R3'' \cite[Pogl.~26.4.6]{mcu-ref-manual} prenašamo podatke med CLB
 enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C1''-``C2''
 in pripadajočimi ``MATCH'' vrednostmi.
 
@@ -256,7 +256,7 @@ notranje signale CLB preko zunajega programa za prikazovanje grafov (slika
 
 Orodje avtomatsko generira tudi datoteko za grafični pregled povezav v
 koprocesorju. Ta se prevede v obliko ``.html'', ki jo lahko odpremo v vsakem
-brskalniku (slika \ref{fig:clbtool_diagram})\cite[Pogl.~1]{clb-user-guide}.
+brskalniku (slika \ref{fig:clbtool_diagram}) \cite[Pogl.~1]{clb-user-guide}.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{html_diagram}}
