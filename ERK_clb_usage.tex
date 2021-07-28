@@ -70,8 +70,8 @@ simulacijskih datotek ter dodatnega diagrama povezav.
 Primer praktične uporabe CLB koprocesorja je emulacija inkrementalnega
 dajalnika. Emulacija inkrementalnega dajalnika je uporabna predvsem v HIL in
 PHIL sistemih \cite{lauss} \cite{nibert}, kateri so v zadnjem času vedno bolj
-pogosto v uporabi za preizkušanje elektronike namenjene za krmiljenje oziroma regulacijo
-električnih strojev.
+pogosto v uporabi za preizkušanje elektronike namenjene za krmiljenje oziroma
+regulacijo električnih strojev.
 
 
 \section{Idejna zasnova}
@@ -90,18 +90,19 @@ dva izhodna signala, ki sta drug drugemu zamaknjena za 90°. Poleg
 tega pa je potrebno dodati tudi sposobnost za spremembo smeri ``vrtenja'', kar
 pomeni da ob določenih pogojih začne ``prehitevati'' prej počasnejši signal.
 
-Cilnji potek signalov simuliranega inkrementalnega dajalnika je prikazan na sliki
-\ref{fig:enkoder_zasnova}, kjer lahko opazimo da je na vhod CLB koprocesorja
-priključen kvadratni signal z vklopnim razmerjem 50\%.
+Cilnji potek signalov simuliranega inkrementalnega dajalnika je prikazan na
+sliki \ref{fig:enkoder_zasnova}, kjer lahko opazimo da je na vhod CLB
+koprocesorja priključen kvadratni signal z vklopnim razmerjem 50\%.
 
 Kot je to dejstvo na veliko področjih, je tudi tu možnih več
 pristopov. Tako implementacija, opisana v nadaljevanju ni bila očitna že od
-samega začetka in tudi samo raziskovanje je vključevalo nemalo neuspelih poskusov.
+samega začetka in tudi samo raziskovanje je vključevalo nemalo neuspelih
+poskusov.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{enkoder_zasnova}}
-    \caption{Cilnji potek signalov simuliranega inkrementalnega dajalnika z uporabo
-             CLB koprocesorja}
+    \caption{Cilnji potek signalov simuliranega inkrementalnega dajalnika z
+             uporabo CLB koprocesorja}
     \label{fig:enkoder_zasnova} 
 \end{figure} 
 
@@ -118,10 +119,12 @@ orodja lahko omenjene datoteke generiramo tudi s spletnim orodjem
 
 \subsection{Splošne nastavitve}
 Ker je v našem primeru CLB enota uporabljana relativno samostojno je pri
-razvoju programa za CLB za preverjanje, ali je CLB enota pravilno nastavljena, najlažje uporabiti simulacijo.  V ta namen je v orodju
-``CLB Tool'' za modul ``BOUNDARY'', ki določa vhode v CLB modul, na voljo možnost izbire simuliranega kvadratnega
-signala. Za implementacijo inkrementalnega dajalnika je kot simuliran vhod
-definiran vhod ``in2'', kar prikazuje tudi slika \ref{fig:clbtool_boundary}.
+razvoju programa za CLB za preverjanje, ali je CLB enota pravilno nastavljena,
+najlažje uporabiti simulacijo.  V ta namen je v orodju ``CLB Tool'' za modul
+``BOUNDARY'', ki določa vhode v CLB modul, na voljo možnost izbire simuliranega
+kvadratnega signala. Za implementacijo inkrementalnega dajalnika je kot
+simuliran vhod definiran vhod ``in2'', kar prikazuje tudi slika
+\ref{fig:clbtool_boundary}.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{clbtool_boundary}}
