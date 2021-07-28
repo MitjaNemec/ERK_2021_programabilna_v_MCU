@@ -47,7 +47,7 @@
 Configurable Logic Block (CLB) is a response from Texas Instruments to the
 often difficult implementation of FPGA integrated circuits. This article
 presents how CLB can be used in order to implement an emulation of incremental
-encoder signals. In addition to presentation how the emulition is designed, the
+encoder signals. In addition to presentation how the emulation is designed, the
 paper discusses how the CLB behaves in practice and what are the experiences
 using the tooling to program the CLB.
 
@@ -70,7 +70,7 @@ simulacijskih datotek ter dodatnega diagrama povezav.
 Primer praktične uporabe CLB koprocesorja je emulacija inkrementalnega
 dajalnika. Emulacija inkrementalnega dajalnika je uporabna predvsem v HIL in
 PHIL sistemih \cite{lauss} \cite{nibert}, kateri so v zadnjem času vedno bolj
-pogosto v uporabi za preizkušanje elektronike zakrmiljenje/regulacijo
+pogosto v uporabi za preizkušanje elektronike namenjene za krmiljenje oziroma regulacijo
 električnih strojev.
 
 
@@ -90,17 +90,17 @@ dva izhodna signala, ki sta drug drugemu zamaknjena za 90°. Poleg
 tega pa je potrebno dodati tudi sposobnost za spremembo smeri ``vrtenja'', kar
 pomeni da ob določenih pogojih začne ``prehitevati'' prej počasnejši signal.
 
-Zasnova simuliranega inkrementalnega dajalnika je prikazana na sliki
+Cilnji potek signalov simuliranega inkrementalnega dajalnika je prikazan na sliki
 \ref{fig:enkoder_zasnova}, kjer lahko opazimo da je na vhod CLB koprocesorja
-priključen kvadratni z vklopnim razmerjem 50\%.
+priključen kvadratni signal z vklopnim razmerjem 50\%.
 
-Kot je to dejstvo v veliko področjih, je tudi tu možnih več
-pristopov. Tudi implementacija, opisana v nadaljevanju ni bila očitna že od
-samega začetka, samo raziskovanje je vključevalo nemalo neuspelih poskusov.
+Kot je to dejstvo na veliko področjih, je tudi tu možnih več
+pristopov. Tako implementacija, opisana v nadaljevanju ni bila očitna že od
+samega začetka in tudi samo raziskovanje je vključevalo nemalo neuspelih poskusov.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{enkoder_zasnova}}
-    \caption{Idejna zasnova simuliranega inkrementalnega dajalnika z uporabo
+    \caption{Cilnji potek signalov simuliranega inkrementalnega dajalnika z uporabo
              CLB koprocesorja}
     \label{fig:enkoder_zasnova} 
 \end{figure} 
@@ -118,8 +118,8 @@ orodja lahko omenjene datoteke generiramo tudi s spletnim orodjem
 
 \subsection{Splošne nastavitve}
 Ker je v našem primeru CLB enota uporabljana relativno samostojno je pri
-razvoju programa za CLB najlažje uporabiti simulacijo.  V ta namen je v orodju
-``CLB Tool'' za modul ``BOUNDARY'' na voljo možnost simuliranega kvadratnega
+razvoju programa za CLB za preverjanje, ali je CLB enota pravilno nastavljena, najlažje uporabiti simulacijo.  V ta namen je v orodju
+``CLB Tool'' za modul ``BOUNDARY'', ki določa vhode v CLB modul, na voljo možnost izbire simuliranega kvadratnega
 signala. Za implementacijo inkrementalnega dajalnika je kot simuliran vhod
 definiran vhod ``in2'', kar prikazuje tudi slika \ref{fig:clbtool_boundary}.
 
@@ -142,7 +142,7 @@ Emulacijo inkrementalnega dajalnika smo implementirali na naslednji način:
 
 Zasnova inkrementalnega dajalnika je prikazana na sliki
 \ref{fig:dobra_zasnova_shema} in uporablja 1 LUT4 modul, 2 števca in HLC modul.
-Implemetirana je na naslednjih korakih, ki se navezujejo na poteke signalov s
+Implemetirana je v naslednjih korakih, ki se navezujejo na poteke signalov s
 slike \ref{fig:dobra_zasnova_shema} in \ref{fig:dobra_zasnova_potek}.
 \begin{itemize}
     \item Vhod ``in2'' je direktno in negirano preko LUT4 modula speljan v
@@ -274,7 +274,7 @@ void ECAP_apwm_init(float freq, float duty)
 Opazimo lahko, da je za nastavitev delovanja potrebno določiti le dolžino
 periode in primerjalne vrednosti. Slednja je namenjena preklopu iz visokega v
 nizko stanje pri generiranju PWM signala. Preko te funkcije tako generiramo
-signal z določitvijo frekvence in delovnega cikla (``freq'' in ``duty'') Za
+signal z določitvijo frekvence in vklopnega razmerja (``freq'' in ``duty'') Za
 boljši vpogled v sistem je preko ``GPIO'' modula ta signal speljan tudi iz
 naprave, kjer ga lahko opazujemo z osciloskopom ali logičnim analizatorjem.
 
