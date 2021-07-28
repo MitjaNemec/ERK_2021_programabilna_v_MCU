@@ -36,9 +36,9 @@
 
 \begin{abstract}{Povzetek}
 FPGA integrated circuits are often indispensable in practice, but their
-integration into the sysdtem is often demanding and costly. In this article, we
+integration into the system is often demanding and costly. In this article, we
 explore one of the answers to this problem offered by the manufacturer Texas
-Instruments. In their microcontrollers, there is an additional coprocessor,
+Instruments. In their microcontrollers series C2000, there is an additional coprocessor,
 called ``CLB'', which is similar to a FPGA. The article offers an overview of
 said coprocessor, its detailed structure, how it is connected to the rest of
 the microcontroller and its capabilities.
@@ -78,8 +78,8 @@ z vgradnjo mikrkrmilnika v samo FPGA vezje \cite{fpga-developers-guide}.
 Z druge strani na naštete težave odgovarja proizvajalec Texas Instruments s
 koprocesorjem CLB (angl. configurable logic block), ki je vdelan v nekaj
 njihovih mikrokrmilnikov. Ta naj bi po proizvajalčevih trditvah tako nadomestil
-dodaten FPGA (in s tem razvijalcu prihranil marsikatero uro), kot tudi omogočil
-programiranje s preprostim vmesnikom \cite{clb-intro}.
+dodaten FPGA, kot tudi omogočil
+programiranje s preprostim vmesnikom (in s tem razvijalcu prihranil marsikatero uro)\cite{clb-intro}.
 
 
 \section{Predstavitev CLB}\label{sec:predstavitev}
@@ -104,7 +104,7 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
     \item 3 štirivhodne LUT4 (angl. 4-input lookup table),
     \item 8 trivhodnih izhodnih LUT3 (angl. 3-input lookup table),
     \item 3 števce,
-    \item 3 FSM (angl. finite state machine),
+    \item 3 avtomate stanj FSM (angl. finite state machine),
     \item 1 HLC (angl. high level controller) in
     \item 1 nastavljiv preklopni blok.
 \end{itemize}
@@ -188,7 +188,7 @@ kot štirivhodni LUT modul.
 \subsection{HLC modul}\label{sec:hlc}
 HLC modul je za razliko od ostale naprave veliko bolj kompleksen (slika \ref{fig:hlc}).
 Gre pravzaprav za zelo okrnjeno procesno jedro, kateremu lahko sprogramiramo
-rudimentarno sekvenco ukazov v zbirniku \cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
+rudimentarno sekvenco največ štirih ukazov v zbirniku \cite[Pogl.~26.4.6.2]{mcu-ref-manual}:
 \begin{itemize}
     \item ADD/SUB - seštevanje in odštevanje,
     \item MOV/MOV\_T1/MOV\_T2 - premikanje,
@@ -200,7 +200,7 @@ To sekvenco pa sprožimo preko zunanjih signalov.
 
 Tako lahko s HLC modulom preko lastnih registrov
 ``R0''-``R3'' \cite[Pogl.~26.4.6]{mcu-ref-manual} prenašamo podatke med CLB
-enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C1''-``C2''
+enoto in glavnim jedrom, kot tudi med trenutno vrednostjo števcev ``C0''-``C2''
 in pripadajočimi ``MATCH'' vrednostmi.
 
 \begin{figure}[htb]
