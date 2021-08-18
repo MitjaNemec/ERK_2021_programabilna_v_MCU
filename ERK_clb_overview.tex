@@ -21,10 +21,10 @@
 
 \begin{document}
 \begin{sloppypar}
-\title{Pregled  v mikrokrmilnik vgrajenih programirljivih logičnih vezij}
+\title{Pregled programirljivih logičnih vezij vgrajenih v C2000 družino mikrokrmilnikov}
 
 \author{Andrej Kenda, Mitja Nemec}
-
+% 
 \affiliation{Univerza v Ljubljani, Fakulteta za elektrotehniko, Tržaška 25,
              1000 Ljubljana, Slovenija}
 
@@ -67,12 +67,12 @@ omenjenega mikrokrmilnika in ga uporabimo kot dodaten procesor
 Kljub temu, da so FPGA čipi precej zmogljivi, pa je njihova integracija v
 sistem težka.  Kadra, ki ima globoko znanje takšnih sistemov je zaradi
 zahtevnosti precej malo. FPGA vezja namreč pogosto zahtevajo uporabo zunanjih
-RAM in FLASH vezji ter ADC in/ali DAC pretvornikov. Tako že načrtovanje
+RAM in FLASH vezij ter ADC in/ali DAC pretvornikov. Tako že načrtovanje
 tiskanega vezja okoli FPGA vezja zahteva več truda, dodaten trud pa zahteva
 tudi komunikacija med posameznimi moduli. V kolikor pa je poleg poleg FPGA
 prisoten tudi mikrokrmilnik je tak sistem v primerjavi s sistemom, ki temelji
-samo in samo na mikrokrmilniku dražji tako za načrtovanje, razvoj programske
-opreme kot tudi za izdelavo. Proizvajalci FPGA vezji na te probleme odgovarjajo
+samo na mikrokrmilniku dražji tako za načrtovanje, razvoj programske
+opreme kot tudi za izdelavo. Proizvajalci FPGA vezij na te probleme odgovarjajo
 z vgradnjo mikrkrmilnika v samo FPGA vezje \cite{fpga-developers-guide}.
 
 Z druge strani na naštete težave odgovarja proizvajalec Texas Instruments s
@@ -121,9 +121,9 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
 \end{figure*}
 
 \subsection{LUT moduli}\label{sec:lut}
-``LUT4'' modul omogoča izvajanje logičnih operacij nad vhodnimi signali (slika
-\ref{fig:lut4} - ``IN0''-``IN3''). Podprte logične operacije so ``AND'',
-``OR'', ``NOT'' in ``XOR''.  \cite[Pogl.~3.3]{clb-user-guide}. 
+``LUT4'' modul preslika kombinacijo vhodnih signalov v en izhodni signal na podlagi prireditvene tabele (slika
+\ref{fig:lut4} - ``IN0''-``IN3''). Tako lahko implementiramo poljubno kombinacijo logičnih operacij nad vhodnimi signali. Preslikava pa se zapiše preko orodja ``CLB Tool'' samo z logičnimi operacijami ``AND'',
+``OR'', ``NOT'' in ``XOR''\cite[Pogl.~3.3]{clb-user-guide}. 
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{shema_lut}}
@@ -140,7 +140,7 @@ ter njegov izhod predstavlja izhod podsklopa (``tile'')
 Števec je precej kompleksen modul v CLB-ju, ki omogoča več različnih načinov
 delovanja.  Lako deluje kot števec/komparator, samo ko komparator, ki primerja
 dve 32-bitni števili, ali pa kot aritmetična enota, ki prišteva oz. odšteva dve
-števili ali pa nad enim številom zvede opreacijo dvojiškega premika v levo oz.
+števili ali pa nad enim številom izvede opreacijo dvojiškega premika v levo oz.
 desno. S slike \ref{fig:stevec} je moč razbrati štiri funkcijske vhode;
 ``RESET'', ``MODE 0'', ``MODE 1'' in ``EVENT''. ``RESET'' ob visoki vrednosti
 števec postavi na vrednost 0, ``MODE 0'' ob visoki vrednosti omogoči štetje,
@@ -166,7 +166,7 @@ in začne šteti od 0.
 \cite[Pogl.~26.4.2]{mcu-ref-manual}.
 
 \subsection{FSM moduli}
-FSM modul omogoča implementacijo avtomata stanj. Le ta je implementiran z dvema
+FSM modul omogoča implementacijo avtomata stanj, ki ima do štiri različna stanja zakodirana s signali ``S0'' in ``S1''. Avtomat je implementiran z dvema
 LUT blokoma: ``S0 Next State LUT'' in ``S1 Next State
 LUT'' (slika \ref{fig:fsm}), ki sta po zgradbi povsem enake opisanim v poglavju
 \ref{sec:lut}. Ta služita interni modulaciji signalov in operirata z zunanjima
@@ -221,7 +221,7 @@ Tool'' (Pogl. \ref{sec:clb_tool}) zaradi postavitve predstavljen pod imenom
 
 \section{Uporaba CLB}\label{sec:clb_tool}
 Za samo programiranje CLB koprocesorja v praksi je proizvajalec Texas
-Instruments postavil grafični vmesnik ``CLB Tool'' (slika \ref{fig:clbtool}),
+Instruments postavil vmesnik ``CLB Tool'' (slika \ref{fig:clbtool}),
 ki nam preko izbire določenih parametrov zgenerira kodo za uporabo v našem
 projektu.
 
@@ -248,7 +248,7 @@ vključimo v naš ``C'' program.
 Poleg aplikacijske kode, pa nam orodje dovoljuje tudi generiranje simulacijskih
 datotek. Te se na koncu prevedejo v datoteko ``CLB.vcd'', ki omogoča vpogled v
 notranje signale CLB preko zunajega programa za prikazovanje grafov (slika
-\ref{fig:clbtool_simulacija}).
+\ref{fig:clbtool_simulacija}). #### TODO ###
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{gtkwave}}

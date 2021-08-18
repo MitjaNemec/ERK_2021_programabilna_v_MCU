@@ -295,7 +295,7 @@ tem prevzema mesto prej simuliranega signala ``in0''.
 Za lažjo uporabo simuliranega inkrementalnega dajalnika so vse nastavitve, ki
 niso del orodja ``CLB Tool'' zapakirane v funkciji ``CLB1\_init''. Za končnega
 uporabnika pa je vse skupaj razkrito v funkciji, prikazani na seznamu
-\ref{lst:klic_enkoderja}
+\ref{lst:klic_enkoderja}.
 
 \filbreak
 \begin{lstlisting}[language=C,
@@ -318,6 +318,10 @@ Funkciji nastavimo frekvenco inkrementalnega dajalnika in preko tega se nastavi
 signala v CLB koprocesor. S seznama \ref{lst:klic_enkoderja} lahko vidimo tudi
 klic prej omenjene funkcije ``CLB1\_init'', ki skrbi za nastavitev vseh ostalih
 parametrov CLB koprocesorja.
+
+Lastnosti tako implementirane emulacije inkrementalnega dajalnika v večji meri določa vir pravokotnega signala, s katerim nastavljamo hitrost vrtenja inkrementalnega dajalnika. CAP enota, ki služi kot vir tega signala omogoča, da se perioda signala nastavlja na 5 ns natančno (pri mikrokrmilniku, ki ima sistemsko uro 200 MHz). Najkrajša perioda tako znaša 10 ns, najdaljša pa 0,0465 s (5ns * 2³²). Korak periode znaša 5 ns. 
+
+V primeru, da želimo emulirati inkrementalni dajalnik, ki ima 4096 pulzov na obrat to pomeni, da lahko emuliramo hitrosti od 0,157 vrt/min do neživljanskih 1,4 mijonov vrt/min, kar več kot zadošča za emulacijo današnjih pogonov.
 
 
 \section{Zaključek}
