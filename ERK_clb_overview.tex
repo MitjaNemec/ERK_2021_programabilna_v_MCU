@@ -21,7 +21,8 @@
 
 \begin{document}
 \begin{sloppypar}
-\title{Pregled programirljivih logičnih vezij vgrajenih v C2000 družino mikrokrmilnikov}
+\title{Pregled programirljivih logičnih vezij vgrajenih v C2000 družino
+       mikrokrmilnikov}
 
 \author{Andrej Kenda, Mitja Nemec}
 % 
@@ -38,10 +39,10 @@
 FPGA integrated circuits are often indispensable in practice, but their
 integration into the system is often demanding and costly. In this article, we
 explore one of the answers to this problem offered by the manufacturer Texas
-Instruments. In their microcontrollers series C2000, there is an additional coprocessor,
-called ``CLB'', which is similar to a FPGA. The article offers an overview of
-said coprocessor, its detailed structure, how it is connected to the rest of
-the microcontroller and its capabilities.
+Instruments. In their microcontrollers series C2000, there is an additional
+coprocessor, called ``CLB'', which is similar to a FPGA. The article offers an
+overview of said coprocessor, its detailed structure, how it is connected to
+the rest of the microcontroller and its capabilities.
 \end{abstract}
 
 \selectlanguage{slovene}
@@ -121,9 +122,12 @@ vsebuje \cite[Pogl.~26.4]{mcu-ref-manual}:
 \end{figure*}
 
 \subsection{LUT moduli}\label{sec:lut}
-``LUT4'' modul preslika kombinacijo vhodnih signalov v en izhodni signal na podlagi prireditvene tabele (slika
-\ref{fig:lut4} - ``IN0''-``IN3''). Tako lahko implementiramo poljubno kombinacijo logičnih operacij nad vhodnimi signali. Preslikava pa se zapiše preko orodja ``CLB Tool'' samo z logičnimi operacijami ``AND'',
-``OR'', ``NOT'' in ``XOR''\cite[Pogl.~3.3]{clb-user-guide}. 
+``LUT4'' modul preslika kombinacijo vhodnih signalov v en izhodni signal na
+podlagi prireditvene tabele (slika \ref{fig:lut4} - ``IN0''-``IN3''). Tako
+lahko implementiramo poljubno kombinacijo logičnih operacij nad vhodnimi
+signali. Preslikava pa se zapiše preko orodja ``CLB Tool'' samo z logičnimi
+operacijami ``AND'', ``OR'', ``NOT'' in
+``XOR''\cite[Pogl.~3.3]{clb-user-guide}. 
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{shema_lut}}
@@ -166,9 +170,10 @@ in začne šteti od 0.
 \cite[Pogl.~26.4.2]{mcu-ref-manual}.
 
 \subsection{FSM moduli}
-FSM modul omogoča implementacijo avtomata stanj, ki ima do štiri različna stanja zakodirana s signali ``S0'' in ``S1''. Avtomat je implementiran z dvema
-LUT blokoma: ``S0 Next State LUT'' in ``S1 Next State
-LUT'' (slika \ref{fig:fsm}), ki sta po zgradbi povsem enake opisanim v poglavju
+FSM modul omogoča implementacijo avtomata stanj, ki ima do štiri različna
+stanja zakodirana s signali ``S0'' in ``S1''. Avtomat je implementiran z dvema
+LUT blokoma: ``S0 Next State LUT'' in ``S1 Next State LUT'' (slika
+\ref{fig:fsm}), ki sta po zgradbi povsem enake opisanim v poglavju
 \ref{sec:lut}. Ta služita interni modulaciji signalov in operirata z zunanjima
 signaloma ``EXT\_IN0'', ``EXT\_IN1'' in vhodoma ``S0'' in ``S1'', ki prevzameta
 prejšnjo vrednost izhoda pripadajoče tabele. Izhod avtomata stanj pa določa
@@ -245,10 +250,12 @@ vključimo v naš ``C'' program.
     \label{fig:clbtool_struktura} 
 \end{figure} 
 
-Poleg aplikacijske kode, pa nam orodje dovoljuje tudi generiranje simulacijskih
-datotek. Te se na koncu prevedejo v datoteko ``CLB.vcd'', ki omogoča vpogled v
-notranje signale CLB preko zunajega programa za prikazovanje grafov (slika
-\ref{fig:clbtool_simulacija}). #### TODO ###
+Poleg aplikacijske kode, pa nam orodje avtomatsko zgenerira tudi simulacijsko
+datoteko ``CLB.vcd''. Gre za datoteko, v kateri je zapisan potek časovnih
+signalov v koprocesorju. Odpremo jo lahko z zunanjim programom, ki omogoča
+prikaz njene vsebine, s čimer posredno pridobimo vpogled v vse signale v
+CLB-ju. Na primeru s slike \ref{fig:clbtool_simulacija} je v ta namen
+uporabljen program ``GTK wave''.
 
 \begin{figure}[htb]
     \centerline{\includegraphics[width=8cm]{gtkwave}}
@@ -290,11 +297,6 @@ smiselna. Nemalokrat se znajdemo v situaciji, kjer bi bilo potrebno modulirati
 nek signal, vendar je samo zanj uporaba dodatnega čipa nesmiselna. Poleg tega
 pa je s stališča delodajalcev velikokrat bolj smiselno uporabiti rešitev, ki jo
 lahko implementira obstoječ kader, kot pa iskanje znanja izven podjetja.
-
-\section{Dodatno branje}
-Več informacij o sami implementaciji CLB je opisanih v \cite{clb-designing}. Za
-migracijo obstoječih FPGA projektov na CLB pa je precej dober uvod vir
-\cite{fpga-to-clb}.
 
 
 \printbibliography
