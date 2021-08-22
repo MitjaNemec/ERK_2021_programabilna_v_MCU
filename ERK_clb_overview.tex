@@ -250,11 +250,13 @@ vključimo v naš ``C'' program.
     \label{fig:clbtool_struktura} 
 \end{figure} 
 
-Poleg aplikacijske kode, pa nam orodje avtomatsko zgenerira tudi simulacijsko
-datoteko ``CLB.vcd''. Gre za datoteko, v kateri je zapisan potek časovnih
-signalov v koprocesorju. Odpremo jo lahko z zunanjim programom, ki omogoča
-prikaz njene vsebine, s čimer posredno pridobimo vpogled v vse signale v
-CLB-ju. Na primeru s slike \ref{fig:clbtool_simulacija} je v ta namen
+Poleg aplikacijske kode, pa nam ob orodje ob prevodu (angl. build) avtomatsko
+zgenerira tudi simulacijsko datoteko ``CLB.vcd''. V principu je CLB v
+primerjavi z FPGA relativno preprost in simulacija ne vključuje internih
+zakasnitev, ter se zato izvede zelo hitro. V omenjeni datoteki je zapisan potek
+časovnih signalov v koprocesorju. Odpremo jo lahko z zunanjim programom, ki
+omogoča prikaz njene vsebine, s čimer posredno pridobimo vpogled v vse signale
+v CLB-ju. Na primeru s slike \ref{fig:clbtool_simulacija} je v ta namen
 uporabljen program ``GTK wave''.
 
 \begin{figure}[htb]
